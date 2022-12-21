@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, Text, View, ActivityIndicator, RefreshControl, TouchableOpacity, Image, Button } from 'react-native';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components/native';
 import { Audio } from 'expo-av';
+import TrackInList from './components/TrackInList';
 
 const StyledImage = styled.Image`
   height: 100px;
@@ -13,7 +14,8 @@ const StyledImage = styled.Image`
 const HomeScreen = ({ navigation }) => {
     const [state, setState] = useState();
     const [isLoading, setIsLoading]=useState(true);
-    const [sound, setSound] = useState();
+   
+    // const sound = useRef(new Audio.Sound())
 
    const fetchSoundCards = () => {
     axios.get('http://localhost:3000/api/v1/soundcards/').then((r) => {
@@ -23,16 +25,14 @@ const HomeScreen = ({ navigation }) => {
     })
    }
   
-  const playSound = async(link) => {
-    // alert.m](link);
-    // alert(`http://localhost:3000${link}`)
-    const sound = new Audio.Sound()
-    await sound.loadAsync({
-      uri: `http://localhost:3000${link}`
-  })
+  // const playSound = async(link) => {
+  //   const sound = new Audio.Sound()
+  //   await sound.loadAsync({
+  //     uri: `http://localhost:3000${link}`
+  // })
   
-  await sound.playAsync()
-  }
+  // await sound.playAsync()
+  // }
 
    const sliceName = (name) => {
     if(name.length >= 50) {
@@ -45,14 +45,14 @@ const HomeScreen = ({ navigation }) => {
       fetchSoundCards()
     }, [])
 
-    useEffect(() => {
-      return sound
-        ? () => {
-            console.log('Unloading Sound');
-            sound.unloadAsync();
-          }
-        : undefined;
-    }, [sound]);
+    // useEffect(() => {
+    //   return sound
+    //     ? () => {
+    //         console.log('Unloading Sound');
+    //         sound.unloadAsync();
+    //       }
+    //     : undefined;
+    // }, [sound]);
     return (
        <>
        {isLoading ? (
@@ -67,15 +67,9 @@ const HomeScreen = ({ navigation }) => {
             renderItem={({item, i}) => {
               return (
                 <View>
-                    <TouchableOpacity onPress={() => navigation.navigate("Player", {id: item.id})}>
-                      <StyledImage 
-                      source={{uri: `http://localhost:3000${item?.image?.url}`}}
-                      />
-                        <Text>{sliceName(item.name)}</Text>
-                        <Text>{new Date(item.created_at).toLocaleDateString()}</Text>
-                    </TouchableOpacity>
-                  <Button title='Play' onPress={() => playSound(item?.audiofile?.url)} />
+                  <TrackInList item={item} navigation={navigation}/>
                 </View>
+                
               )
             }} />
          )}
