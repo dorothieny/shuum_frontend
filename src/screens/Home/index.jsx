@@ -62,7 +62,7 @@ const HomeScreen = ({ navigation }) => {
          ) : (
         <FlatList 
             refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchSoundCards}/>}
-            style={{backgroundColor: 'lightgray'}} 
+            style={{backgroundColor: '#E0E2E9'}} 
             data={state} 
             renderItem={({item, i}) => {
               return (
