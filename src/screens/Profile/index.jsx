@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, RefreshControl, TouchableOpacity, Image } from "react-native"
 import axios from "axios";
 import styled from 'styled-components/native';
-import { TrackTitile } from "../Home/components/TrackInList";
+
 
 const StyledAvatar = styled.Image`
     height: 144px;
@@ -26,9 +26,9 @@ const ProfileScreen = ({id = 3}) => {
     const [profile, setProfile] = useState([]);
 
     useEffect(() => {
-    axios.get('http://localhost:3000/api/v1/users/?id=3')
+    axios.get('http://localhost:3000/api/v1/users/1')
     .then((response) => {
-        setProfile(response.data.data[0])
+        setProfile(response.data)
     })
     .catch((err) => {
         alert(err)
@@ -41,7 +41,7 @@ const ProfileScreen = ({id = 3}) => {
             <StyledAvatar 
                 source={{uri: `http://localhost:3000${profile?.avatar?.url}`}}
             />
-            <TrackTitile>{profile?.name}</TrackTitile>
+            <Text>{profile?.name}</Text>
             <Text>Подписчики {profile?.followed_users?.length}</Text>
             <Text>Подписки {profile?.following_users?.length}</Text>
         </ProfileCard>

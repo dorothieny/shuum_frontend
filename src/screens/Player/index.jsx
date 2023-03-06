@@ -9,7 +9,7 @@ const PlayerScreen = ({ route }) => {
 
    const fetchSoundCards = () => {
     axios.get('http://localhost:3000/api/v1/soundcards/').then((r) => {
-      setState(r.data.data.filter(item => item.id === id)[0])
+      setState(r.data.filter(item => item.id === id)[0])
     }).finally(() => {
       setIsLoading(false)
     })

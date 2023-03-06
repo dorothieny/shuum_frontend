@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, RefreshControl, TouchableOpacity, Image } from "react-native"
 import axios from "axios";
-import SearchInput from "../Home/components/SearchInput";
+import SearchInput from "../../components/SearchInput";
 import styled from 'styled-components/native';
-import { TrackTitile } from "../Home/components/TrackInList";
+
 
 const AvatarThumb = styled.Image`
   width: 32px;
@@ -58,7 +58,7 @@ const SearchScreen = () => {
                 <TouchableOpacity>
                   <FlexRow>
                     <AvatarThumb source={{uri: `http://localhost:3000${item?.avatar?.thumb?.url}`}}/>
-                    <TrackTitile>{item.name}</TrackTitile>
+                    <Text>{item.name}</Text>
                   </FlexRow>
                 </TouchableOpacity>
               )

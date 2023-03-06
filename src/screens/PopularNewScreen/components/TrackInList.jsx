@@ -157,7 +157,7 @@ const TrackInList = ({item, navigation}) => {
                                             return (
                                                 <Tag key={i}>
                                                     <Text>
-                                                    {item.name}
+                                                    {item.tagname}
                                                     </Text>
                                                 </Tag>
                                             )
@@ -172,7 +172,7 @@ const TrackInList = ({item, navigation}) => {
                             </View>) : (
                                 <>
                                 <ActivityIndicator />
-                                <Text>Loading Song</Text>
+                                
                             </>
                             )
                             }
