@@ -8,6 +8,7 @@ import ProfileScreen from "./Profile";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyTabBar from "../components/TabBar";
 import ScreenHeader from "../components/Screen_Header";
+import { StatusBar } from "react-native";
 
 const styles = require("../Styles");
 
@@ -20,6 +21,8 @@ const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   return (
+    <>
+    <StatusBar barStyle={"light-content"}/>
     <NavigationContainer theme={theme}>
       <Tab.Navigator
         screenOptions={{ headerShown: true }}
@@ -74,6 +77,7 @@ const Navigation = () => {
         />
       </Tab.Navigator>
     </NavigationContainer>
+    </>
   );
 };
 

@@ -1,21 +1,18 @@
 import {
   FlatList,
-  Text,
   View,
   ActivityIndicator,
   RefreshControl,
-  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-const styles = require("../../Styles");
 import deviceStorage from "../../sevice/deviceStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DynamicFeed from "./components/DynamicFeed";
-import HorizontalNewsPopular from "./components/HorizontalNewsPopular";
+const styles = require("../../Styles");
+
 
 const HomeScreen = ({ navigation }) => {
-  const [state, setState] = useState([1, 2, 3]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUser = () => {
@@ -46,18 +43,15 @@ const HomeScreen = ({ navigation }) => {
     });
   };
 
-  const sliceName = (name) => {
-    if (name.length >= 50) {
-      return name.substring(0, 50) + "...";
-    } else {
-      return name;
-    }
-  };
   useEffect(() => {
     fetchUser();
   }, []);
 
   const mock = [
+    {
+      type: "recorder",
+      title: "Проигрыватель",
+    },
     {
       type: "news",
       title: "Новое",
@@ -83,19 +77,27 @@ const HomeScreen = ({ navigation }) => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
+        <>
         <FlatList
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={isLoading}
-          //     onRefresh={fetchUser}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={fetchUser} />
+          }
           style={styles.app}
           data={mock}
-          renderItem={({item, i}) => {
-            return <DynamicFeed item={item} key={i} />;
+          renderItem={({item, index}) => {
+            return (
+              <View style={ index !== 0 && {
+                paddingBottom: styles.feedBlock.betweenGap, 
+                backgroundColor: styles.mainColors.white,
+                paddingTop: 16,
+                paddingLeft: 16,
+                paddingRight: 16,
+                }}>
+                <DynamicFeed item={item} key={index}/>
+              </View>
+            );
           }}
-        />
+        /></>
       )}
     </>
   );

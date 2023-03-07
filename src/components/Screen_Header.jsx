@@ -1,44 +1,49 @@
-import { Text,View, TouchableOpacity } from "react-native";
-import {navigation} from "@react-navigation/native"
+import { Text, View, TouchableOpacity } from "react-native";
+import { navigation } from "@react-navigation/native";
 import BackIcon from "../icons/A_BackIcon";
+import LogoIcon from "../icons/A_Logo";
 const styles = require("../Styles");
 
-
-
 const ScreenHeader = (props) => {
-    function handleBackButtonClick() {
-        try {
-          props.navigation?.goBack();
-          return true;
-        } catch {
-          return;
-        }
-      }
+
+  console.log(props.route.name);
+
+const getTitle = (label) => {
+  switch (label) {
+    case 'Лента':
+      return <LogoIcon />;
+    default:
+      return <Text style={styles.topBar.text}>{label}</Text>;
+  }
+}
+
+  function handleBackButtonClick() {
+    try {
+      props.navigation?.goBack();
+      return true;
+    } catch {
+      return;
+    }
+  }
   return (
-    <View
-      style={styles.topBar}
-    >
+    <View style={styles.topBar}>
       <TouchableOpacity
-              accessibilityRole="button"
-              onPress={handleBackButtonClick}
-            >
-              <BackIcon />
-            </TouchableOpacity>
-      <TouchableOpacity
-        style={{ padding: 10 }}
-        onPress={() => {
-          alert("Right");
-        }}
+        accessibilityRole="button"
+        onPress={handleBackButtonClick}
       >
-        <Text>Center</Text>
+        {props.route.name !== "Лента" ? <BackIcon /> :  <Text style={{width: 25}}/>}
       </TouchableOpacity>
+
       <TouchableOpacity
-        style={{ padding: 10 }}
-        onPress={() => {
-          alert("Right");
-        }}
+        accessibilityRole="button"
+        onPress={() => null}
       >
-        <Text>Right</Text>
+        {getTitle(props.route.name)}
+        {/* <LogoIcon/> */}
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Text style={{width: 25}}/>
       </TouchableOpacity>
     </View>
   );

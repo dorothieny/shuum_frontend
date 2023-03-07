@@ -1,17 +1,86 @@
-import { View, Text} from "react-native"
-// import styled from "styled-components/native";
+import { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
+const styles = require("../../../Styles");
+import axios from "axios";
+import RoundSound from "./subcomponents/RoundSound";
+import GoIcon from "../../../icons/A_GoIcon";
 
-// const FlexRow = styled.View`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   padding: 16px 24px;
-// `;
-const HorizontalNewsPopular = () => {
+
+const HorizontalNewsPopular = (props) => {
+  const { title, type } = props.data;
+  const [state, setState] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchContent = (type) => {
+    if (type === "popular") {
+      axios
+        .get("http://localhost:3000/api/v1/popular/")
+        .then((r) => {
+          setState(r.data);
+          //   alert(JSON.stringify(r.data));
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else if (type === "news") {
+      axios
+        .get("http://localhost:3000/api/v1/newest/")
+        .then((r) => {
+          setState(r.data);
+            //  alert(JSON.stringify(r.data));
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchContent(type);
+  }, [type]);
+
+    
   return (
-    <View>
-      <Text>HorizontalNewsPopular</Text>
-    </View>
+    <>
+      {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <View>
+          <View style={{...styles.flexRow, marginBottom: styles.feedBlock.blockGap, ...styles.feedBlock.titleRow}}>
+            <View style={{...styles.flexRow}}>
+            <Text style={styles.feedBlock.title}>{title}</Text>
+            <Text
+              style={{...styles.feedBlock.title,color: styles.mainColors.gray, marginLeft: 8}}
+            >
+              {state.length}
+            </Text>
+            </View>
+
+            <GoIcon/>
+          </View>
+          {(state.lenght == 0) ? <></> :<FlatList
+            horizontal
+            pagingEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            legacyImplementation={false}
+            data={state}
+            renderItem={({ item }) => {
+              return <RoundSound item={item} />;
+            }}
+            keyExtractor={(item) => item.id}
+            style={{ width: "100%" }}
+          />}
+        </View>
+      )}
+    </>
   );
 };
 export default HorizontalNewsPopular;

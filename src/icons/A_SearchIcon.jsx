@@ -1,18 +1,18 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import Svg, { Path } from "react-native-svg";
-const BackIcon = () => {
+const SearchIcon = () => {
   return (
     <View>
       <Svg
-        width="26"
-        height="26"
-        viewBox="0 0 26 26"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <Path
-          d="M24.3137 13.0007H1.68629M1.68629 13.0007L13 24.3145M1.68629 13.0007L13 1.68704"
-          stroke="#F5F5F5"
+          d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
+          stroke="#F6F6F6"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -22,4 +22,4 @@ const BackIcon = () => {
   );
 };
 
-export default BackIcon;
+export default SearchIcon;
