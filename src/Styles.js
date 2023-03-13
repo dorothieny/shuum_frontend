@@ -93,11 +93,10 @@ module.exports = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         circle: {
-            backgroundColor: black,
-            borderRadius: "100%",
+            backgroundColor: white,
             width: 107,
             height: 107,
-            marginBottom: 8,
+            borderRadius: "100%",
         },
 
         text: {
@@ -126,6 +125,7 @@ module.exports = StyleSheet.create({
         borderRadius: "500%",
         backgroundColor: black,
         display: "flex",
+        position: "relative",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
@@ -173,6 +173,16 @@ module.exports = StyleSheet.create({
             height: 360,
             width: 360,
             borderRadius: "500%",
+        },
+        fontP1: {
+            fontWeight: 400,
+            fontSize: 16,
+            lineHeight: 18,
+        },
+        fontP2: {
+            fontWeight: 400,
+            fontSize: 12,
+            lineHeight: 14,
         }
     }
     //   logo: {

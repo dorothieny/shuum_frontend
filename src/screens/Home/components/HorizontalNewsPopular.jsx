@@ -66,7 +66,8 @@ const HorizontalNewsPopular = (props) => {
 
             <GoIcon/>
           </View>
-          {(state.lenght == 0) ? <></> :<FlatList
+          {(state.lenght == 0) ? <></> :
+          <FlatList
             horizontal
             pagingEnabled={false}
             showsHorizontalScrollIndicator={false}
