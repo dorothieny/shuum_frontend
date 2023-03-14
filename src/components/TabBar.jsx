@@ -56,7 +56,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
               : route.name;
 
           const isHidden =
-            label === "Популярное" || label === "Новое" ? true : false;
+            label === "Популярное" || label === "Новое" || label === "Авторизация" ? true : false;
           const isFocused = state.index === index;
 
           const onPress = () => {

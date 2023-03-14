@@ -12,6 +12,7 @@ const HorizontalSubscriptions = (props) => {
 
   const fetchFeed = () => {
     axios
+    //TODO:this is hardcode
       .get("http://localhost:3000/api/v1/users/2/feed")
       .then((r) => {
         setState(r.data);
@@ -56,9 +57,10 @@ const HorizontalSubscriptions = (props) => {
 
             <GoIcon />
           </View>
-          {state?.map((user) => {
+          {state?.map((user, index) => {
             return (
               <View
+              key={index}
                 style={{
                   width: 200,
                   height: 144,

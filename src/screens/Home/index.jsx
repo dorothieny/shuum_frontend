@@ -6,44 +6,29 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import deviceStorage from "../../sevice/deviceStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DynamicFeed from "./components/DynamicFeed";
+import {useSelector} from 'react-redux';
 const styles = require("../../Styles");
 
 
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const {userId} = useSelector(state => state.main)
 
   const fetchUser = () => {
+    // alert(userId)
+
     axios
       .get("http://localhost:3000/api/v1/user/")
       .then((r) => {
-        // alert(JSON.stringify(r))
+        // alert(JSON.stringify(r));
       })
       .then(() => {
         setIsLoading(false);
       });
   };
-
-  const signInFetch = () => {
-    axios
-      .post("http://localhost:3000/api/v1/users/sign_in", {
-        user: { email: "daria@email.com", password: "mypassword" },
-      })
-      .then((r) => {
-        console.log(r.headers.authorization);
-        AsyncStorage.setItem("id_token", r.headers.authorization);
-      });
-  };
-
-  const authToken = () => {
-    AsyncStorage.getItem("id_token", (err, result) => {
-      console.log(result);
-    });
-  };
-
-  useEffect(() => {
+useEffect(() => {
     fetchUser();
   }, []);
 
