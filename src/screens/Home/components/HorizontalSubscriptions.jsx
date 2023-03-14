@@ -2,30 +2,33 @@ import { View, Text, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import GoIcon from "../../../icons/A_GoIcon";
 import axios from "axios";
-
+import {useSelector} from "react-redux";
 const styles = require("../../../Styles");
 
 const HorizontalSubscriptions = (props) => {
   const [state, setState] = useState([]);
   const { title, type } = props.data;
   const [isLoading, setIsLoading] = useState(true);
+  const { userId } = useSelector((state) => state.main);
 
-  const fetchFeed = () => {
-    axios
-    //TODO:this is hardcode
-      .get("http://localhost:3000/api/v1/users/2/feed")
-      .then((r) => {
-        setState(r.data);
-        // alert(JSON.stringify(r.data));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  const fetchFeed = (id) => {
+    if(id) {
+        axios
+        //TODO:this is hardcode
+          .get(`http://localhost:3000/api/v1/users/${id}/feed`)
+          .then((r) => {
+            setState(r.data);
+            // alert(JSON.stringify(r.data));
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+    }
   };
 
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    fetchFeed(userId);
+  }, [userId]);
 
   return (
     <>

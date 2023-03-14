@@ -54,7 +54,7 @@ const CardOfDay = (props) => {
               </Text>
             </View>
 
-            <GoIcon />
+            {/* <GoIcon /> */}
           </View>
           <RandomSound data={state} />
         </>

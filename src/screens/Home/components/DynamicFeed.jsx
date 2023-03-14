@@ -5,18 +5,18 @@ import HorizontalSubscriptions from "./HorizontalSubscriptions";
 import CardOfDay from "./CardOfDay";
 import Recorder from "./Recorder";
 
-const DynamicFeed = memo(({item}) => {
+const DynamicFeed = memo(({item, navigation}) => {
   switch (item.type) {
     case 'news':
-      return <HorizontalNewsPopular data={item} />;
+      return <HorizontalNewsPopular data={item} navigation={navigation}/>;
     case 'track_of_day':
-      return <CardOfDay data={item} />;
+      return <CardOfDay data={item} navigation={navigation}/>;
     case 'subscriptions':
-      return <HorizontalSubscriptions data={item} />;
+      return <HorizontalSubscriptions data={item} navigation={navigation}/>;
     case 'popular':
-      return <HorizontalNewsPopular data={item} />;
+      return <HorizontalNewsPopular data={item} navigation={navigation}/>;
       case 'recorder':
-      return <Recorder data={item} />;
+      return <Recorder data={item} navigation={navigation}/>;
     default:
       return <Text>Nothing</Text>;
   }

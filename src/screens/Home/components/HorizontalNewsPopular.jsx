@@ -10,10 +10,11 @@ const styles = require("../../../Styles");
 import axios from "axios";
 import RoundSound from "./subcomponents/RoundSound";
 import GoIcon from "../../../icons/A_GoIcon";
-
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HorizontalNewsPopular = (props) => {
   const { title, type } = props.data;
+  const { navigation } = props;
   const [state, setState] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +34,7 @@ const HorizontalNewsPopular = (props) => {
         .get("http://localhost:3000/api/v1/newest/")
         .then((r) => {
           setState(r.data);
-            //  alert(JSON.stringify(r.data));
+          //  alert(JSON.stringify(r.data));
         })
         .finally(() => {
           setIsLoading(false);
@@ -45,7 +46,6 @@ const HorizontalNewsPopular = (props) => {
     fetchContent(type);
   }, [type]);
 
-    
   return (
     <>
       {isLoading ? (
@@ -54,31 +54,46 @@ const HorizontalNewsPopular = (props) => {
         </View>
       ) : (
         <View>
-          <View style={{...styles.flexRow, marginBottom: styles.feedBlock.blockGap, ...styles.feedBlock.titleRow}}>
-            <View style={{...styles.flexRow}}>
-            <Text style={styles.feedBlock.title}>{title}</Text>
-            <Text
-              style={{...styles.feedBlock.title,color: styles.mainColors.gray, marginLeft: 8}}
+          <TouchableOpacity onPress={() => navigation.navigate(title)}>
+            <View
+              style={{
+                ...styles.flexRow,
+                marginBottom: styles.feedBlock.blockGap,
+                ...styles.feedBlock.titleRow,
+              }}
             >
-              {state.length}
-            </Text>
-            </View>
+              <View style={{ ...styles.flexRow }}>
+                <Text style={styles.feedBlock.title}>{title}</Text>
+                <Text
+                  style={{
+                    ...styles.feedBlock.title,
+                    color: styles.mainColors.gray,
+                    marginLeft: 8,
+                  }}
+                >
+                  {state.length}
+                </Text>
+              </View>
 
-            <GoIcon/>
-          </View>
-          {(state.lenght == 0) ? <></> :
-          <FlatList
-            horizontal
-            pagingEnabled={false}
-            showsHorizontalScrollIndicator={false}
-            legacyImplementation={false}
-            data={state}
-            renderItem={({ item }) => {
-              return <RoundSound item={item} />;
-            }}
-            keyExtractor={(item) => item.id}
-            style={{ width: "100%" }}
-          />}
+              <GoIcon />
+            </View>
+          </TouchableOpacity>
+          {state.lenght == 0 ? (
+            <></>
+          ) : (
+            <FlatList
+              horizontal
+              pagingEnabled={false}
+              showsHorizontalScrollIndicator={false}
+              legacyImplementation={false}
+              data={state}
+              renderItem={({ item }) => {
+                return <RoundSound item={item} />;
+              }}
+              keyExtractor={(item) => item.id}
+              style={{ width: "100%" }}
+            />
+          )}
         </View>
       )}
     </>

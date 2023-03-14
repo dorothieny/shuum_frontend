@@ -78,7 +78,7 @@ useEffect(() => {
                 paddingLeft: 16,
                 paddingRight: 16,
                 }}>
-                <DynamicFeed item={item} key={index}/>
+                <DynamicFeed item={item} key={index} navigation={navigation}/>
               </View>
             );
           }}

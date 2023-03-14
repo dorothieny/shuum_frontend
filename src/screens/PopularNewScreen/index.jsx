@@ -10,13 +10,24 @@ import TrackInList from "./components/TrackInList";
 const styles = require("../../Styles");
 
 
-const PopularNewScreen = ({ navigation }) => {
+const PopularNewScreen = ({ navigation, route }) => {
   const [state, setState] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
+  const getRouteParam = (name) => {
+    switch (name) {
+        case "Новое":
+          return "newest";
+        case "Популярное":
+          return "popular";
+        default:
+          return "soundcards";
+      }
+  }
+
   const fetchSoundCards = () => {
     axios
-      .get("http://localhost:3000/api/v1/soundcards/")
+      .get(`http://localhost:3000/api/v1/${getRouteParam(route.name)}/`)
       .then((r) => {
         setState(r.data);
       })
@@ -52,7 +63,7 @@ const PopularNewScreen = ({ navigation }) => {
               onRefresh={fetchSoundCards}
             />
           }
-          style={styles.app}
+          style={{...styles.app, backgroundColor: styles.mainColors.white}}
           data={state}
           renderItem={({ item, i }) => {
             return (

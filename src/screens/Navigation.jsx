@@ -10,10 +10,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyTabBar from "../components/TabBar";
 import ScreenHeader from "../components/Screen_Header";
 import { StatusBar } from "react-native";
-import { initStore } from "../sevice/redux/store";
-import { Provider } from "react-redux";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
 
 const styles = require("../Styles");
 
@@ -22,22 +21,33 @@ const theme = {
     background: styles.mainColors.green,
   },
 };
+
 const Tab = createBottomTabNavigator();
-const store = initStore();
+
+
 
 const Navigation = () => {
   const [token, setToken] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    authToken()
-  }, [])
-  const fetchUser = () => {
-    // alert(userId)
+    authToken();
+  }, []);
 
+  useEffect(() => {
+    fetchUser();
+  }, [token]);
+
+  const fetchUser = () => {
     axios
-      .get("http://localhost:3000/api/v1/user/")
+      .get("http://localhost:3000/api/v1/user/", {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
       .then((r) => {
-        alert(JSON.stringify(r));
+        // alert(JSON.stringify(r.data));
+        dispatch({type: "SET_MAIN_REDUCER", payload: { userId: r.data.id}})
       })
       .then(() => {
         setIsLoading(false);
@@ -46,16 +56,13 @@ const Navigation = () => {
 
   const authToken = () => {
     AsyncStorage.getItem("id_token", (err, result) => {
+      // alert(result);
       setToken(result);
     });
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   return (
-    <Provider store={store}>
+    <>
       <StatusBar barStyle={"light-content"} />
       <NavigationContainer theme={theme}>
         <Tab.Navigator
@@ -126,7 +133,7 @@ const Navigation = () => {
           )}
         </Tab.Navigator>
       </NavigationContainer>
-    </Provider>
+    </>
   );
 };
 
