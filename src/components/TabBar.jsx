@@ -10,6 +10,7 @@ import ProfileIcon from "../icons/A_ProfileIcon";
 const styles = require("../Styles");
 
 const MyTabBar = ({ state, descriptors, navigation }) => {
+
   function handleBackButtonClick() {
     try {
       navigation?.goBack();
@@ -41,6 +42,8 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
         return <Text>*</Text>;
     }
   }
+
+  
 
   return (
     <View style={styles.tabBarContainer}>

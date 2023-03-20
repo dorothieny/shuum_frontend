@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import MoreIcon from "../icons/A_MoreIcon";
 
 // <DropdownComponent label={state.routes[state.index].name.toString()} data={[{label: 'Главная', value: "main"}, {label: 'Профиль', value: "profile"}]}/>
 
-const DropdownComponent = ({ data, label }) => {
-  const [value, setValue] = useState(null);
+const DropdownComponent = ({ icon, label = "", data=[]}) => {
+  const [value, setValue] = useState(" ");
   const [isFocus, setIsFocus] = useState(false);
 
-  useEffect(() => {
-    setValue(label);
-  }, [label]);
+
 
   return (
     <View style={styles.container}>
@@ -21,16 +20,17 @@ const DropdownComponent = ({ data, label }) => {
         iconStyle={styles.iconStyle}
         data={data}
         maxHeight={300}
-        width={100}
         labelField="label"
-        valueField="value"
-        placeholder={value || " "}
+        placeholder={ " "}
         value={value}
+        visibleSelectedItem={false}
+        renderRightIcon={() => (icon ? icon : <MoreIcon />)}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item.value);
           setIsFocus(false);
+          item.onChange(item.label);
         }}
       />
     </View>
@@ -42,6 +42,9 @@ export default DropdownComponent;
 const styles = StyleSheet.create({
   container: {
     width: 150,
+    position: "absolute",
+    right: 0,
+    bottom: -16,
   },
   dropdown: {
     paddingHorizontal: 8,

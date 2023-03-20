@@ -4,11 +4,13 @@ import BackIcon from "../icons/A_BackIcon";
 import LogoIcon from "../icons/A_Logo";
 import { useEffect } from "react";
 const styles = require("../Styles");
-
+import MoreIcon from "../icons/A_MoreIcon";
+import DropdownComponent from "./Dropdown";
 const ScreenHeader = (props) => {
   useEffect(() => {
-    console.log(props.route);
+    console.log(props);
   }, []);
+
 
   const getTitle = (label) => {
     switch (label) {
@@ -18,6 +20,8 @@ const ScreenHeader = (props) => {
         return <Text></Text>;
       case "Регистрация":
         return <Text></Text>;
+        case "Профиль":
+          return <Text style={styles.topBar.text}>@{props.named}</Text>;
       default:
         return <Text style={styles.topBar.text}>{label}</Text>;
     }
@@ -37,7 +41,7 @@ const ScreenHeader = (props) => {
         accessibilityRole="button"
         onPress={handleBackButtonClick}
       >
-        {props.route.name !== "Лента" ? (
+        {props.route.name !== "Лента" && props.route.name !== "Профиль" && props.route.name !== "Поиск" ? (
           <BackIcon />
         ) : (
           <Text style={{ width: 25 }} />
@@ -50,7 +54,16 @@ const ScreenHeader = (props) => {
       </TouchableOpacity>
 
       <TouchableOpacity>
-        <Text style={{ width: 25 }} />
+        <View style={{position: "relative", height: "auto", width: 25}}>
+          {props.route.name === "Профиль" ? <DropdownComponent
+               data = {[
+                { label: "Изменить", value: "Edit", onChange: (v) => alert(v)},
+                { label: "Поделиться профилем", value: "Share", onChange: () => null},
+              ]}
+              label=""
+              icon={<MoreIcon/>}
+            /> : <Text style={{ width: 25 }} />}
+            </View>
       </TouchableOpacity>
     </View>
   );

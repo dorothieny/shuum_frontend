@@ -14,7 +14,7 @@ const styles = require("../../Styles");
 
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const {userId} = useSelector(state => state.main)
+  const {userId} = useSelector(state => state.main);
 
   const fetchUser = () => {
     // alert(userId)

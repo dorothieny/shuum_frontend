@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -7,53 +7,109 @@ import {
   RefreshControl,
   TouchableOpacity,
   Image,
+  Animated,
 } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import styled from "styled-components/native";
+import MyTabBar from "./components/Tabs";
+const styles = require("../../Styles");
+import FavouritesList from "./components/FavouritesList";
+import MySoundsList from "./components/MySoundsList";
+import { SelectCountry } from "react-native-element-dropdown";
+import DropdownComponent from "../../components/Dropdown";
 
-const StyledAvatar = styled.Image`
-  height: 144px;
-  width: 144px;
-  border-radius: 100%;
-  margin-bottom: 16px;
-`;
+const Tab = createMaterialTopTabNavigator();
 
-const ProfileCard = styled.View`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  background-color: white;
-  border-radius: 24px;
-  height: 272px;
-`;
+const scrollHeight = new Animated.Value(300);
 
-const ProfileScreen = ({ navigator }) => {
+const scrollheightInt = scrollHeight.interpolate({
+  inputRange: [0, 200],
+  outputRange: [200, 0],
+});
+
+const scrollY = new Animated.Value(0);
+const translateY = scrollY.interpolate({
+  inputRange: [0, 200],
+  outputRange: [0, -300],
+});
+
+const ProfileScreen = ({ navigation }) => {
   const { userId } = useSelector((state) => state.main);
   const [profile, setProfile] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [followed, setFollowed] = useState([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/v1/users/${userId}`)
       .then((response) => {
-        setProfile(response.data);
+        setProfile(response.data.user);
+        setCount(response.data.count);
       })
       .catch((err) => {
         alert(err);
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/api/v1/users/${userId}/following`)
+      .then((r) => {
+        setFollowing(r.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/api/v1/users/${userId}/followed`)
+      .then((r) => {
+        setFollowed(r.data);
+      });
+  }, []);
+
   return (
-    <ProfileCard>
-      <StyledAvatar
-        source={{ uri: `http://localhost:3000${profile?.avatar?.url}` }}
-      />
-      <Text>@{profile?.name}</Text>
-      <Text>Подписчики {profile?.followed_users?.length}</Text>
-      <Text>Подписки {profile?.following_users?.length}</Text>
-    </ProfileCard>
+    <>
+      <View style={{ overflow: "hidden" }}>
+        <Animated.View
+          style={{
+            height: scrollheightInt,
+            transform: [{ translateY: translateY }],
+          }}
+        >
+          <View style={styles.profile.card}>
+            <Image
+              style={{
+                ...styles.profile.avatar,
+                backgroundColor: styles.mainColors.black,
+              }}
+              source={{ uri: `http://localhost:3000${profile?.avatar?.url}` }}
+            />
+            <Text>@{profile?.name}</Text>
+            <Text>Шумов {count}</Text>
+            <Text>Подписчики {followed?.length}</Text>
+            <Text>Подписки {following?.length}</Text>
+          </View>
+        </Animated.View>
+      </View>
+      <Tab.Navigator
+        tabBar={(props) => <MyTabBar {...props} />}
+        initialRouteName={"My"}
+        tabBarPosition={"top"}
+      >
+        <Tab.Screen
+          name="My"
+          initialParams={{scrollY: scrollY, scrollHeight: scrollHeight}}
+          component={MySoundsList}
+        />
+        <Tab.Screen
+          name="Fav"
+          initialParams={{scrollY: scrollY, scrollHeight: scrollHeight}}
+          component={FavouritesList}
+        />
+      </Tab.Navigator>
+    </>
   );
 };
 

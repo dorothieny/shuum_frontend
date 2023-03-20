@@ -184,30 +184,20 @@ module.exports = StyleSheet.create({
             fontSize: 12,
             lineHeight: 14,
         }
+    }, 
+    profile: {
+        avatar: {
+            width: 70,
+            height: 70,
+            borderRadius: "100%",
+        },
+        card: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+        }
+
+        
     }
-    //   logo: {
-    //     height: 80
-    //   },
-    //   header: {
-    //     padding: 20
-    //   },
-    //   title: {
-    //     fontWeight: "bold",
-    //     fontSize: "1.5rem",
-    //     marginVertical: "1em",
-    //     textAlign: "center",
-    //     color: yellow
-    //   },
-    //   text: {
-    //     lineHeight: "1.5em",
-    //     fontSize: "1.125rem",
-    //     marginVertical: "1em",
-    //     textAlign: "center"
-    //   },
-    //   link: {
-    //     color: "yellow"
-    //   },
-    //   code: {
-    //     fontFamily: "monospace, monospace"
-    //   }
 });

@@ -13,9 +13,9 @@ import { StatusBar } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-
+import {useSelector} from "react-redux";
 const styles = require("../Styles");
-
+import RecorderScreen from "./Recorder";
 const theme = {
   colors: {
     background: styles.mainColors.green,
@@ -29,6 +29,11 @@ const Tab = createBottomTabNavigator();
 const Navigation = () => {
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
+  const {username, userId} = useSelector(state => state.main);
+
+  // useEffect(() => {
+  //   alert(username);
+  // }, [username])
 
   useEffect(() => {
     authToken();
@@ -47,7 +52,7 @@ const Navigation = () => {
       })
       .then((r) => {
         // alert(JSON.stringify(r.data));
-        dispatch({type: "SET_MAIN_REDUCER", payload: { userId: r.data.id}})
+        dispatch({type: "SET_MAIN_REDUCER", payload: { userId: r.data.id, username: r.data.name}})
       })
       .then(() => {
         setIsLoading(false);
@@ -56,7 +61,6 @@ const Navigation = () => {
 
   const authToken = () => {
     AsyncStorage.getItem("id_token", (err, result) => {
-      // alert(result);
       setToken(result);
     });
   };
@@ -67,8 +71,8 @@ const Navigation = () => {
       <NavigationContainer theme={theme}>
         <Tab.Navigator
           screenOptions={{ headerShown: true }}
-          initialRouteName={"Главная"}
-          tabBar={(props) => <MyTabBar {...props} />}
+          initialRouteName={"Лента"}
+          tabBar={(props) => userId ? <MyTabBar {...props} /> : <></>}
           tabBarOptions={{
             activeTintColor: "white",
             style: {
@@ -76,13 +80,21 @@ const Navigation = () => {
             },
           }}
         >
-          {token ? (
+          {userId ? (
             <>
               <Tab.Screen
                 name="Лента"
                 component={HomeScreen}
                 options={{
                   title: "Лента",
+                  header: (props) => <ScreenHeader {...props} />,
+                }}
+              />
+              <Tab.Screen
+                name="Рекордер"
+                component={RecorderScreen}
+                options={{
+                  title: "Рекордер",
                   header: (props) => <ScreenHeader {...props} />,
                 }}
               />
@@ -115,7 +127,7 @@ const Navigation = () => {
                 component={ProfileScreen}
                 options={{
                   title: "Профиль",
-                  header: (props) => <ScreenHeader {...props} />,
+                  header: (props) => <ScreenHeader {...props} named={username || "Профиль"} />,
                 }}
               />
             </>
