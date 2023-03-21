@@ -51,7 +51,7 @@ const Navigation = () => {
         },
       })
       .then((r) => {
-        // alert(JSON.stringify(r.data));
+        alert(JSON.stringify(r.data));
         dispatch({type: "SET_MAIN_REDUCER", payload: { userId: r.data.id, username: r.data.name}})
       })
       .then(() => {

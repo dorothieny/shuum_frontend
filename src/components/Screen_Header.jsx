@@ -7,9 +7,6 @@ const styles = require("../Styles");
 import MoreIcon from "../icons/A_MoreIcon";
 import DropdownComponent from "./Dropdown";
 const ScreenHeader = (props) => {
-  useEffect(() => {
-    console.log(props);
-  }, []);
 
 
   const getTitle = (label) => {

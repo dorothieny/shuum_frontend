@@ -49,7 +49,7 @@ const ProfileScreen = ({ navigation }) => {
         setCount(response.data.count);
       })
       .catch((err) => {
-        alert(err);
+        // alert(err);
       });
   }, []);
 
