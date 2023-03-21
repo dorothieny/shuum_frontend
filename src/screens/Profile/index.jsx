@@ -16,8 +16,6 @@ import MyTabBar from "./components/Tabs";
 const styles = require("../../Styles");
 import FavouritesList from "./components/FavouritesList";
 import MySoundsList from "./components/MySoundsList";
-import { SelectCountry } from "react-native-element-dropdown";
-import DropdownComponent from "../../components/Dropdown";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -40,6 +38,8 @@ const ProfileScreen = ({ navigation }) => {
   const [following, setFollowing] = useState([]);
   const [followed, setFollowed] = useState([]);
   const [count, setCount] = useState(0);
+  const [created, setCreated] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -52,6 +52,16 @@ const ProfileScreen = ({ navigation }) => {
         // alert(err);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/api/v1/users/${userId}/created`)
+      .then((response) => {
+        setCreated(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {});
+  }, [userId]);
 
   useEffect(() => {
     axios
@@ -71,44 +81,59 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <>
-      <View style={{ overflow: "hidden" }}>
-        <Animated.View
-          style={{
-            height: scrollheightInt,
-            transform: [{ translateY: translateY }],
-          }}
-        >
-          <View style={styles.profile.card}>
-            <Image
+      {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <>
+          <View style={{ overflow: "hidden" }}>
+            <Animated.View
               style={{
-                ...styles.profile.avatar,
-                backgroundColor: styles.mainColors.black,
+                height: scrollheightInt,
+                transform: [{ translateY: translateY }],
               }}
-              source={{ uri: `http://localhost:3000${profile?.avatar?.url}` }}
-            />
-            <Text>@{profile?.name}</Text>
-            <Text>Шумов {count}</Text>
-            <Text>Подписчики {followed?.length}</Text>
-            <Text>Подписки {following?.length}</Text>
+            >
+              <View style={styles.profile.card}>
+                <Image
+                  style={{
+                    ...styles.profile.avatar,
+                    backgroundColor: styles.mainColors.black,
+                  }}
+                  source={{
+                    uri: `http://localhost:3000${profile?.avatar?.url}`,
+                  }}
+                />
+                <Text>@{profile?.name}</Text>
+                <Text>Шумов {count}</Text>
+                <Text>Подписчики {followed?.length}</Text>
+                <Text>Подписки {following?.length}</Text>
+              </View>
+            </Animated.View>
           </View>
-        </Animated.View>
-      </View>
-      <Tab.Navigator
-        tabBar={(props) => <MyTabBar {...props} />}
-        initialRouteName={"My"}
-        tabBarPosition={"top"}
-      >
-        <Tab.Screen
-          name="My"
-          initialParams={{scrollY: scrollY, scrollHeight: scrollHeight}}
-          component={MySoundsList}
-        />
-        <Tab.Screen
-          name="Fav"
-          initialParams={{scrollY: scrollY, scrollHeight: scrollHeight}}
-          component={FavouritesList}
-        />
-      </Tab.Navigator>
+          <Tab.Navigator
+            tabBar={(props) => <MyTabBar {...props} />}
+            initialRouteName={"My"}
+            tabBarPosition={"top"}
+          >
+            <Tab.Screen
+              name="My"
+              initialParams={{
+                scrollY: scrollY,
+                scrollHeight: scrollHeight,
+                data: created,
+                navigation: navigation,
+              }}
+              component={MySoundsList}
+            />
+            <Tab.Screen
+              name="Fav"
+              initialParams={{ scrollY: scrollY, scrollHeight: scrollHeight }}
+              component={FavouritesList}
+            />
+          </Tab.Navigator>
+        </>
+      )}
     </>
   );
 };

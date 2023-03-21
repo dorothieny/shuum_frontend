@@ -6,6 +6,7 @@ import PlayerScreen from "./Player";
 import LoginScreen from "./Authorizarion";
 import PopularNewScreen from "./PopularNewScreen";
 import ProfileScreen from "./Profile";
+import ProfileEditScreen from "./ProfileEditScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyTabBar from "../components/TabBar";
 import ScreenHeader from "../components/Screen_Header";
@@ -13,7 +14,7 @@ import { StatusBar } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 const styles = require("../Styles");
 import RecorderScreen from "./Recorder";
 const theme = {
@@ -24,12 +25,10 @@ const theme = {
 
 const Tab = createBottomTabNavigator();
 
-
-
 const Navigation = () => {
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
-  const {username, userId} = useSelector(state => state.main);
+  const { username, userId } = useSelector((state) => state.main);
 
   // useEffect(() => {
   //   alert(username);
@@ -52,7 +51,10 @@ const Navigation = () => {
       })
       .then((r) => {
         alert(JSON.stringify(r.data));
-        dispatch({type: "SET_MAIN_REDUCER", payload: { userId: r.data.id, username: r.data.name}})
+        dispatch({
+          type: "SET_MAIN_REDUCER",
+          payload: { userId: r.data.id, username: r.data.name },
+        });
       })
       .then(() => {
         setIsLoading(false);
@@ -72,7 +74,7 @@ const Navigation = () => {
         <Tab.Navigator
           screenOptions={{ headerShown: true }}
           initialRouteName={"Лента"}
-          tabBar={(props) => userId ? <MyTabBar {...props} /> : <></>}
+          tabBar={(props) => (userId ? <MyTabBar {...props} /> : <></>)}
           tabBarOptions={{
             activeTintColor: "white",
             style: {
@@ -127,7 +129,43 @@ const Navigation = () => {
                 component={ProfileScreen}
                 options={{
                   title: "Профиль",
-                  header: (props) => <ScreenHeader {...props} named={username || "Профиль"} />,
+                  header: (props) => (
+                    <ScreenHeader
+                      {...props}
+                      named={username || "Профиль"}
+                      dropdownItems={[
+                        {
+                          label: "Изменить",
+                          value: "Edit",
+                          onChange: () => props?.navigation?.navigate("Редактирование"),
+                        },
+                        {
+                          label: "Поделиться профилем",
+                          value: "Share",
+                          onChange: () => null,
+                        },
+                      ]}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="Редактирование"
+                component={ProfileEditScreen}
+                options={{
+                  title: "Редактирование",
+                  header: (props) => (
+                    <ScreenHeader
+                      {...props}
+                      dropdownItems={[
+                        {
+                          label: "Выйти",
+                          value: "Exit",
+                          onChange: (v) => alert(v),
+                        },
+                      ]}
+                    />
+                  ),
                 }}
               />
             </>

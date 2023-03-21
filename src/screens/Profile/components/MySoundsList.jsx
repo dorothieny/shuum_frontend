@@ -16,16 +16,15 @@ import {
 
 import SearchInput from "../../../components/SearchInput";
 const styles = require("../../../Styles");
+import TrackInList from "../../PopularNewScreen/components/TrackInList";
 
 const MySoundsList = ({ route }) => {
-  const { scrollY, scrollHeight } = route.params;
+  const { scrollY, scrollHeight, data, navigation } = route.params;
   const [clicked, setClicked] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
+  console.log(data);
+  const cleanStorage = () => {};
 
-  const cleanStorage =() => {
-
-  }
-  
   return (
     <FlatList
       style={{
@@ -33,26 +32,12 @@ const MySoundsList = ({ route }) => {
         height: "110%",
         borderRadius: 12,
       }}
-      data={[1, 2, 3, 4, 5, 6]}
+      data={data}
       renderItem={({ item, index }) => {
         return (
-          <>
-            <View
-              style={{
-                backgroundColor: "red",
-                width: "100%",
-                height: 200,
-                marginBottom: 12,
-                borderTopLeftRadius: index === 0 && 12,
-                borderTopRightRadius: index === 0 && 12,
-              }}
-            >
-              <Button
-                title={"cleanStorage"}
-                onPress={() => cleanStorage()}
-              />
-            </View>
-          </>
+          <View>
+            <TrackInList item={item} navigation={navigation} />
+          </View>
         );
       }}
       onScroll={(e) => {
