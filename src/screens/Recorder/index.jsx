@@ -4,6 +4,7 @@ import { Audio } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+const styles = require("../../Styles");
 
 const App = ({ uri }) => {
   const [sound, setSound] = React.useState();
@@ -18,7 +19,6 @@ const App = ({ uri }) => {
   }
 
   React.useEffect(() => {
-    // console.log(sound)
     return sound
       ? () => {
           console.log("Unloading Sound");
@@ -34,8 +34,15 @@ const App = ({ uri }) => {
   );
 };
 
-export const ImagePick = ({ onChoosing }) => {
+export const ImagePick = ({ onChoosing, settedImage = null }) => {
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    console.log(settedImage)
+    if (settedImage) {
+      setImage(settedImage);
+    }
+  }, [settedImage]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -113,7 +120,7 @@ const RecorderScreen = ({ navigation }) => {
       name: `${audiofile.fileName}`,
       type: `${audiofile.type}`,
     });
-    formdata.append("soundcard[tags]", tags)
+    formdata.append("soundcard[tags]", tags);
 
     axios
       .post("http://localhost:3000/api/v1/soundcards", formdata, {
@@ -177,17 +184,17 @@ const RecorderScreen = ({ navigation }) => {
   return (
     <View>
       <TextInput
-        // style={styles.input}
+        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={name}
       />
       <TextInput
-        // style={styles.input}
+        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={descr}
       />
       <TextInput
-        // style={styles.input}
+        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={location}
       />

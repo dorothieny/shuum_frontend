@@ -1,9 +1,9 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 const styles = require("../../../../Styles");
 
-const RoundSound = ({ item }) => {
+const RoundSound = ({ item, style }) => {
   return (
-    <View style={{ ...styles.round }}>
+    <View style={{ ...styles.round, ...style }}>
       <View style={{ marginBottom: 8 }}>
         <Image
           style={

@@ -1,11 +1,11 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 const styles = require("../../../Styles");
 import RecorderIcon from "../../../icons/A_RecorderIcon";
 
-const Recorder = () => {
+const Recorder = ({navigation}) => {
   return (
-    <>
+    <TouchableOpacity onPress={() => navigation.navigate("Рекордер")}>
       <View style={styles.recorder}>
         <View style={styles.recorder.thirdCircle}>
           <View style={styles.recorder.secondCircle}>
@@ -15,7 +15,7 @@ const Recorder = () => {
           </View>
         </View>
       </View>
-    </>
+    </TouchableOpacity>
   );
 };
 export default Recorder;

@@ -64,6 +64,7 @@ const Navigation = () => {
   const authToken = () => {
     AsyncStorage.getItem("id_token", (err, result) => {
       setToken(result);
+      console.log(result);
     });
   };
 
@@ -125,6 +126,25 @@ const Navigation = () => {
                 }}
               />
               <Tab.Screen
+                name="Редактирование"
+                component={ProfileEditScreen}
+                options={{
+                  title: "Редактирование",
+                  header: (props) => (
+                    <ScreenHeader
+                      {...props}
+                      dropdownItems={[
+                        {
+                          label: "Выйти",
+                          value: "Exit",
+                          onChange: (v) => alert(v),
+                        },
+                      ]}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
                 name="Профиль"
                 component={ProfileScreen}
                 options={{
@@ -143,25 +163,6 @@ const Navigation = () => {
                           label: "Поделиться профилем",
                           value: "Share",
                           onChange: () => null,
-                        },
-                      ]}
-                    />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="Редактирование"
-                component={ProfileEditScreen}
-                options={{
-                  title: "Редактирование",
-                  header: (props) => (
-                    <ScreenHeader
-                      {...props}
-                      dropdownItems={[
-                        {
-                          label: "Выйти",
-                          value: "Exit",
-                          onChange: (v) => alert(v),
                         },
                       ]}
                     />

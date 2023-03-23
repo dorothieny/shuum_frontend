@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import Svg, { Path } from "react-native-svg";
-const SearchIcon = ({color="#F6F6F6"}) => {
+const CloseIcon = ({ color = "#F5F5F5", ...restProps }) => {
+
   return (
-    <View>
+    <TouchableOpacity onPress={restProps?.onPress}>
       <Svg
         width="24"
         height="24"
@@ -11,15 +12,15 @@ const SearchIcon = ({color="#F6F6F6"}) => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <Path
-          d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
+          d="M18.75 5.25L5.25 18.75M5.25 5.25L18.75 18.75"
           stroke={color}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </Svg>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-export default SearchIcon;
+export default CloseIcon;

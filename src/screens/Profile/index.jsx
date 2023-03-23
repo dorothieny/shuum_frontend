@@ -12,23 +12,23 @@ import {
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import MyTabBar from "./components/Tabs";
+import MyAdditableTabBar from "../../components/Tabs";
 const styles = require("../../Styles");
 import FavouritesList from "./components/FavouritesList";
 import MySoundsList from "./components/MySoundsList";
 
 const Tab = createMaterialTopTabNavigator();
 
-const scrollHeight = new Animated.Value(300);
+const scrollHeight = new Animated.Value(0);
 
 const scrollheightInt = scrollHeight.interpolate({
-  inputRange: [0, 200],
-  outputRange: [200, 0],
+  inputRange: [0, 250],
+  outputRange: [250, 0],
 });
 
 const scrollY = new Animated.Value(0);
 const translateY = scrollY.interpolate({
-  inputRange: [0, 200],
+  inputRange: [0, 250],
   outputRange: [0, -300],
 });
 
@@ -47,21 +47,13 @@ const ProfileScreen = ({ navigation }) => {
       .then((response) => {
         setProfile(response.data.user);
         setCount(response.data.count);
+        setIsLoading(false);
       })
       .catch((err) => {
         // alert(err);
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/v1/users/${userId}/created`)
-      .then((response) => {
-        setCreated(response.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {});
-  }, [userId]);
 
   useEffect(() => {
     axios
@@ -104,31 +96,32 @@ const ProfileScreen = ({ navigation }) => {
                     uri: `http://localhost:3000${profile?.avatar?.url}`,
                   }}
                 />
-                <Text>@{profile?.name}</Text>
-                <Text>Шумов {count}</Text>
-                <Text>Подписчики {followed?.length}</Text>
-                <Text>Подписки {following?.length}</Text>
+                {/* <Text style={{color: styles.mainColors.white}}>@{profile?.name}</Text> */}
+                <Text style={{color: styles.mainColors.white, marginTop: 30}}>Шумов {count}</Text>
+                <Text style={{color: styles.mainColors.white}}>Подписчики {followed?.length}</Text>
+                <Text style={{color: styles.mainColors.white}}>Подписки {following?.length}</Text>
               </View>
             </Animated.View>
           </View>
           <Tab.Navigator
-            tabBar={(props) => <MyTabBar {...props} />}
+            tabBar={(props) => <MyAdditableTabBar {...props} />}
             initialRouteName={"My"}
             tabBarPosition={"top"}
           >
             <Tab.Screen
-              name="My"
+              name="Мои саундскейпы"
               initialParams={{
                 scrollY: scrollY,
                 scrollHeight: scrollHeight,
-                data: created,
                 navigation: navigation,
+                userId: userId
               }}
               component={MySoundsList}
             />
             <Tab.Screen
-              name="Fav"
-              initialParams={{ scrollY: scrollY, scrollHeight: scrollHeight }}
+              name="Избранное"
+              initialParams={{ scrollY: scrollY, scrollHeight: scrollHeight, navigation: navigation,
+                userId: userId }}
               component={FavouritesList}
             />
           </Tab.Navigator>

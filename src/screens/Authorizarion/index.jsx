@@ -23,7 +23,6 @@ const signInFetch = () => {
         user: { email: "daria@email.com", password: "mypassword" },
       })
       .then((r) => {
-        console.log(r.headers.authorization);
         AsyncStorage.setItem("id_token", r.headers.authorization);
       });
   };

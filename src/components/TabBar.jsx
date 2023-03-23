@@ -10,7 +10,6 @@ import ProfileIcon from "../icons/A_ProfileIcon";
 const styles = require("../Styles");
 
 const MyTabBar = ({ state, descriptors, navigation }) => {
-
   function handleBackButtonClick() {
     try {
       navigation?.goBack();
@@ -32,18 +31,16 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
 
   const getIcon = (label) => {
     switch (label) {
-      case 'Лента':
+      case "Лента":
         return <HomeIcon />;
-      case 'Поиск':
-        return <SearchIcon/>;
-      case 'Профиль':
-        return <ProfileIcon/>;
+      case "Поиск":
+        return <SearchIcon />;
+      case "Профиль":
+        return <ProfileIcon />;
       default:
         return <Text>*</Text>;
     }
-  }
-
-  
+  };
 
   return (
     <View style={styles.tabBarContainer}>
@@ -59,7 +56,13 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
               : route.name;
 
           const isHidden =
-            label === "Популярное" || label === "Новое" || label === "Авторизация" ? true : false;
+            label === "Популярное" ||
+            label === "Новое" ||
+            label === "Авторизация" ||
+            label === "Рекордер" ||
+            label === "Редактирование"
+              ? true
+              : false;
           const isFocused = state.index === index;
 
           const onPress = () => {
@@ -90,7 +93,12 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
               onPress={onPress}
               onLongPress={onLongPress}
               key={index}
-              style={{ display: "flex", justifyContentL: "center", paddingRight: index == state.routes.length-1 ? 0: 32, opacity: isFocused ? 1 : 0.3 }}
+              style={{
+                display: "flex",
+                justifyContentL: "center",
+                paddingRight: index == state.routes.length - 1 ? 0 : 32,
+                opacity: isFocused ? 1 : 0.3,
+              }}
             >
               {getIcon(label)}
             </TouchableOpacity>

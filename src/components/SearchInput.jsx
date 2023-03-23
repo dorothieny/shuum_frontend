@@ -1,83 +1,60 @@
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, TextInput, View, Keyboard, Button } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, TextInput, View, Keyboard, Button } from "react-native";
+const styles = require("../Styles");
+import SearchIcon from "../icons/A_SearchIcon";
+import CloseIcon from "../icons/A_CloseIcon";
 
-
-
-const SearchInput = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {  
-    return (
-      <View style={styles.container}>
-        <View
-          style={
-            clicked
-              ? styles.searchInput__clicked
-              : styles.searchInput__unclicked
+const SearchInput = ({
+  clicked,
+  searchPhrase,
+  setSearchPhrase,
+  setClicked,
+  isLight = true,
+}) => {
+  const inputRef = useRef();
+  const isLightTheme = isLight ? "lightTheme" : "darkTheme";
+  console.log(styles.searchInput.container);
+  return (
+    <View style={styles.searchInput[isLightTheme].container}>
+      <View
+        style={
+          clicked
+            ? styles.searchInput[isLightTheme].searchInput__clicked
+            : styles.searchInput[isLightTheme].searchInput__unclicked
+        }
+      >
+        {/* search Icon */}
+        <SearchIcon
+          color={isLight ? styles.mainColors.black : styles.mainColors.white}
+        />
+        {/* Input field */}
+        <TextInput
+          placeholderTextColor={
+            isLight ? "#A1B1AD" : "#4C6D65"
           }
-        >
-          {/* search Icon */}
-          <Ionicons name="search" size={24} />
-          {/* Input field */}
-          <TextInput
-            style={styles.input}
-            placeholder="Search"
-            value={searchPhrase}
-            onChangeText={setSearchPhrase}
-            onFocus={() => {
-              setClicked(true);
+          ref={inputRef}
+          style={styles.searchInput[isLightTheme].input}
+          placeholder="Search"
+          value={searchPhrase}
+          onChangeText={setSearchPhrase}
+          onFocus={() => {
+            inputRef.current.focus();
+            setClicked(true);
+          }}
+        />
+        {/* cross Icon, depending on whether the search bar is clicked or not */}
+        {clicked && (
+          <CloseIcon
+            color={isLight ? styles.mainColors.black : styles.mainColors.white}
+            onPress={() => {
+              setSearchPhrase("");
+              setClicked(false);
+              Keyboard.dismiss();
             }}
           />
-          {/* cross Icon, depending on whether the search bar is clicked or not */}
-          {clicked && (
-             <Ionicons name="close" size={24} onPress={() => {setSearchPhrase("")}}/>
-          )}
-        </View>
-        {/* cancel button, depending on whether the search bar is clicked or not */}
-        {clicked && (
-          <View>
-            <Button
-              title="Cancel"
-              onPress={() => {
-                Keyboard.dismiss();
-                setClicked(false);
-              }}
-            ></Button>
-          </View>
         )}
       </View>
-    );
-  };
-  export default SearchInput;
-  
-  // styles
-  const styles = StyleSheet.create({
-    container: {
-      margin: 15,
-      justifyContent: "flex-start",
-      alignItems: "center",
-      flexDirection: "row",
-      width: "90%",
-  
-    },
-    searchInput__unclicked: {
-      padding: 10,
-      flexDirection: "row",
-      width: "95%",
-      backgroundColor: "#d9dbda",
-      borderRadius: 15,
-      alignItems: "center",
-    },
-    searchInput__clicked: {
-      padding: 10,
-      flexDirection: "row",
-      width: "80%",
-      backgroundColor: "#d9dbda",
-      borderRadius: 15,
-      alignItems: "center",
-      justifyContent: "space-evenly",
-    },
-    input: {
-      fontSize: 20,
-      marginLeft: 10,
-      width: "90%",
-    },
-  });
+    </View>
+  );
+};
+export default SearchInput;

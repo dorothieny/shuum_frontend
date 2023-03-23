@@ -184,7 +184,7 @@ module.exports = StyleSheet.create({
             fontSize: 12,
             lineHeight: 14,
         }
-    }, 
+    },
     profile: {
         avatar: {
             width: 70,
@@ -198,6 +198,84 @@ module.exports = StyleSheet.create({
             justifyContent: "center",
         }
 
-        
+
+    },
+    searchInput: {
+        lightTheme: {
+            container: {
+                justifyContent: "flex-start",
+                alignItems: "center",
+                flexDirection: "row",
+                width: "100%",
+                paddingTop: 16,
+                backgroundColor: white,
+                paddingBottom: 16,
+            },
+            searchInput__unclicked: {
+                flexDirection: "row",
+                width: "95%",
+                backgroundColor: "transparent",
+                borderRadius: 15,
+                alignItems: "center",
+                borderBottomColor: "black",
+            },
+            searchInput__clicked: {
+                flexDirection: "row",
+                width: "95%",
+                backgroundColor: "transparent",
+                borderRadius: 15,
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                borderBottomColor: "black",
+            },
+            input: {
+                fontSize: 20,
+                marginLeft: 10,
+                width: "90%",
+                borderBottomColor: black,
+                borderBottomWidth: 2,
+            },
+        },
+
+        darkTheme: {
+            container: {
+                justifyContent: "flex-start",
+                alignItems: "center",
+                flexDirection: "row",
+                width: "100%",
+                paddingTop: 16,
+                backgroundColor: "transparent",
+                paddingBottom: 16,
+            },
+            searchInput__unclicked: {
+                flexDirection: "row",
+                width: "95%",
+                backgroundColor: "transparent",
+                borderRadius: 15,
+                color: white,
+                alignItems: "center",
+                borderBottomColor: "black",
+            },
+            searchInput__clicked: {
+                flexDirection: "row",
+                width: "95%",
+                backgroundColor: "transparent",
+                borderRadius: 15,
+                color: white,
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                borderBottomColor: "black",
+            },
+            input: {
+                fontSize: 20,
+                marginLeft: 10,
+                width: "90%",
+                color: white,
+                borderBottomColor: white,
+                borderBottomWidth: 2,
+            },
+        },
     }
-});
+
+}
+);

@@ -1,6 +1,10 @@
 import { Animated,Text, View, TouchableOpacity } from 'react-native';
 import React, {useState} from 'react';
-const MyTabBar = ({ state, descriptors, navigation, position })=> {
+const styles = require("../Styles");
+
+const MyAdditableTabBar = ({ state, descriptors, navigation, position })=> {
+    
+
   return (
     <>
     <View style={{ flexDirection: 'row' }}>
@@ -38,7 +42,7 @@ const MyTabBar = ({ state, descriptors, navigation, position })=> {
         const inputRange = state.routes.map((_, i) => i);
         const opacity = position.interpolate({
           inputRange,
-          outputRange: inputRange.map(i => (i === index ? 1 : 0)),
+          outputRange: inputRange.map(i => (i === index ? 1 : 0.5)),
         });
 
         return (
@@ -49,9 +53,9 @@ const MyTabBar = ({ state, descriptors, navigation, position })=> {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{ flex: 1 }}
+            style={{ flex: 1, paddingBottom: 16, paddingTop: 16}}
           >
-            <Animated.Text style={{ opacity, textAlign:"center" }}>
+            <Animated.Text style={{...styles.topBar.text, opacity, textAlign:"center", color: "white" }}>
               {label}
             </Animated.Text>
           </TouchableOpacity>
@@ -61,4 +65,4 @@ const MyTabBar = ({ state, descriptors, navigation, position })=> {
     </>
   );
 }
-export default MyTabBar;
+export default MyAdditableTabBar

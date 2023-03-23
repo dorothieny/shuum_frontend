@@ -88,10 +88,10 @@ const HorizontalNewsPopular = (props) => {
               legacyImplementation={false}
               data={state}
               renderItem={({ item }) => {
-                return <RoundSound item={item} />;
+                return <RoundSound item={item} style={{marginRight: 16}}/>;
               }}
               keyExtractor={(item) => item.id}
-              style={{ width: "100%" }}
+              style={{ width: "100%"}}
             />
           )}
         </View>
