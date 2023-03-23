@@ -38,14 +38,15 @@ const MySoundsList = ({ route }) => {
   }, [userId]);
 
   useEffect(() => {
-
-    // setTimeout(() => console.log(searchPhrase, 1000))
-    // console.log(searchPhrase)
-    setIsLoading(true);
-    searchForShums(searchPhrase);
+    const delayDebounceFn = setTimeout(() => {
+      searchForShums(searchPhrase);
+    }, 1000)
+    return () => clearTimeout(delayDebounceFn)
   }, [searchPhrase])
 
+
 const searchForShums = (searchPhrase) => {
+  setIsLoading(true);
   if(userId) {
      axios.get(`http://localhost:3000/api/v1/soundcards/?multiple=${searchPhrase}&user=${userId}`)
   .then((r) => {
@@ -81,7 +82,7 @@ const searchForShums = (searchPhrase) => {
       data={data}
       renderItem={({ item, index }) => {
         return (
-          <View key={index} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
+          <View key={index+Math.random(0,data.length)} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
             <TrackInList item={item} navigation={navigation} />
           </View>
         );

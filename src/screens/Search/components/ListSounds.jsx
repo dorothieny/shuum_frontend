@@ -50,7 +50,7 @@ const ListSounds = ({ route = {} }) => {
           renderItem={({ item, index }) => {
             return (
               <View
-                key={index}
+                key={index+Math.random(0,localData.length)}
                 style={
                   index == localData.length - 1
                     ? { paddingBottom: 150 }

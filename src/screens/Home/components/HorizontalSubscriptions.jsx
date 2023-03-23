@@ -63,7 +63,7 @@ const HorizontalSubscriptions = (props) => {
           {state?.map((user, index) => {
             return (
               <View
-              key={index}
+              key={index+Math.random(0, state.lenght)}
                 style={{
                   width: 200,
                   height: 144,

@@ -56,10 +56,13 @@ const SearchScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    fetchSoundCards(searchPhrase);
-    // console.log(searchPhrase)
-    // alert(searchPhrase)
-  }, [searchPhrase]);
+    const delayDebounceFn = setTimeout(() => {
+      console.log(searchPhrase)
+      fetchSoundCards(searchPhrase);
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchPhrase])
 
   {
     /* <FlatList 
@@ -79,12 +82,6 @@ const SearchScreen = ({navigation}) => {
   }
 
   return (
-    <>
-      {isLoading ? (
-        <View>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
         <>
           <SearchInput
             clicked={clicked}
@@ -93,6 +90,12 @@ const SearchScreen = ({navigation}) => {
             setSearchPhrase={setSearchPhrase}
             isLight={false}
           />
+          {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <>
           <Tab.Navigator
             tabBar={(props) => <MyAdditableTabBar {...props} />}
             initialRouteName={"My"}

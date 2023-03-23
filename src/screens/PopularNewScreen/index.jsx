@@ -65,10 +65,10 @@ const PopularNewScreen = ({ navigation, route }) => {
           }
           style={{...styles.app, backgroundColor: styles.mainColors.white}}
           data={state}
-          renderItem={({ item, i }) => {
+          renderItem={({ item, index }) => {
             return (
               <View>
-                <TrackInList item={item} navigation={navigation} />
+                <TrackInList key={index+Math.random(0, state.lenght)} item={item} navigation={navigation} />
               </View>
             );
           }}

@@ -36,21 +36,14 @@ const FavoritesList = ({route}) => {
     }
   }, [userId]);
 
-//   useEffect(() => {
-//     setIsLoading(true);
-//     searchForShums(searchPhrase);
-//   }, [searchPhrase])
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     console.log(searchPhrase)
+  //     fetchSoundCards(searchPhrase);
+  //   }, 500)
 
-// const searchForShums = (searchPhrase) => {
-//   if(userId) {
-//      axios.get(`http://localhost:3000/api/v1/soundcards/?multiple=${searchPhrase}&user=${userId}`)
-//   .then((r) => {
-//     setIsLoading(false);
-//     setData(r.data)
-//   })
-//   }
- 
-// }
+  //   return () => clearTimeout(delayDebounceFn)
+  // }, [searchPhrase])
     return (
       <>
       {isLoading ? (
@@ -76,7 +69,7 @@ const FavoritesList = ({route}) => {
           data={data}
           renderItem={({ item, index }) => {
             return (
-              <View key={index} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
+              <View key={index+Math.random(0,data.length)} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
                 <TrackInList item={item} navigation={navigation} />
               </View>
             );
