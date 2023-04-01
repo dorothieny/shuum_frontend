@@ -47,11 +47,22 @@ const MySoundsList = ({ route }) => {
 
 const searchForShums = (searchPhrase) => {
   setIsLoading(true);
+  setData([])
   if(userId) {
      axios.get(`http://localhost:3000/api/v1/soundcards/?multiple=${searchPhrase}&user=${userId}`)
   .then((r) => {
+  //  alert(JSON.stringify(r.data)); 
+  
+//TODO: fix this
+   const uniqueAddresses = Array.from(new Set(r.data.map(a => a.id)))
+    .map(id => {
+      return r.data.find(a => a.id === id)
+    })
+    console.log(uniqueAddresses);
+    setData(uniqueAddresses);
+  })
+  .then(() => {
     setIsLoading(false);
-    setData(r.data)
   })
   }
  
@@ -82,7 +93,7 @@ const searchForShums = (searchPhrase) => {
       data={data}
       renderItem={({ item, index }) => {
         return (
-          <View key={index+Math.random(0,data.length)} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
+          <View key={item.id+index} style={index == (data.length - 1) ? {paddingBottom: 150} : ((index == 0) ? {marginTop: 16} : {})}> 
             <TrackInList item={item} navigation={navigation} />
           </View>
         );

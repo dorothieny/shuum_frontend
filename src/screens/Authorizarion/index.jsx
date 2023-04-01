@@ -2,9 +2,11 @@ import {
   FlatList,
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Button
 } from "react-native";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
@@ -13,14 +15,16 @@ import { useSelector } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const styles = require("../../Styles");
 import ScreenHeader from "../../components/Screen_Header";
+import SearchInput from "../../components/SearchInput";
 
 
 const HomeStack = createNativeStackNavigator();
-
-const signInFetch = () => {
+// "daria@email.com"
+// "mypassword"
+const signInFetch = (email, password) => {
     axios
       .post("http://localhost:3000/api/v1/users/sign_in", {
-        user: { email: "daria@email.com", password: "mypassword" },
+        user: { email: email.toLowerCase(), password: password.toLowerCase() },
       })
       .then((r) => {
         AsyncStorage.setItem("id_token", r.headers.authorization);
@@ -33,27 +37,53 @@ const A = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => navigation.navigate("Вход", { par: "ssfd" })}
       >
-        <Text style={{ paddingTop: 500 }}>Вход</Text>
+        <Text style={{...styles.button, paddingTop: 500 }}>Вход</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Регистрация")}>
-        <Text>Регистрация</Text>
+        <Text style={{...styles.button, paddingTop: 8 }}>Регистрация</Text>
       </TouchableOpacity>
     </>
   );
 };
 
 const B = ({ navigation }) => {
+  const [clicked, setClicked] = useState(false);
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [clicked2, setClicked2] = useState(false);
+  const [searchPhrase2, setSearchPhrase2] = useState();
+  
   return (
-    <TouchableOpacity
-    onPress={() => signInFetch()}
-    >
-      <Text>Вход</Text>
+    <TouchableOpacity>
+      <Text style={styles.button}>Вход</Text>
+      
+  <SearchInput
+              placeholder = {"Почта"}
+              search={false}
+              isLight= {false}
+              clicked={clicked}
+              setClicked={setClicked}
+              searchPhrase={searchPhrase}
+              setSearchPhrase={setSearchPhrase}
+            />
+            <SearchInput
+              isPassword = {true}
+              placeholder = {"Пароль"}
+              search={false}
+              isLight= {false}
+              clicked={clicked2}
+              setClicked={setClicked2}
+              searchPhrase={searchPhrase2}
+              setSearchPhrase={setSearchPhrase2}
+            />
+             <Button title={"Войти"} disabled={!searchPhrase && !searchPhrase2} onPress={() => {
+              navigation.navigate({name: "Лента"})
+              signInFetch(searchPhrase, searchPhrase2)}} />
     </TouchableOpacity>
   );
 };
 
 const C = ({ navigation }) => {
-  return <Text>Регистрация</Text>;
+  return <Text style={styles.button}>Регистрация</Text>;
 };
 const LoginScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);

@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const styles = require("../../Styles");
+import SearchInput from "../../components/SearchInput";
 
 const App = ({ uri }) => {
   const [sound, setSound] = React.useState();
@@ -82,15 +83,20 @@ export const ImagePick = ({ onChoosing, settedImage = null }) => {
   );
 };
 const RecorderScreen = ({ navigation }) => {
-  const [name, setName] = useState("Шумик");
-  const [descr, setDescr] = useState("Записала в ночи");
-  const [location, setLocation] = useState("Москва, Зеленодольская, 28А");
+  const [name, setName] = useState("Поезд");
+  const [descr, setDescr] = useState("Записала в пути");
+  const [location, setLocation] = useState("Москва, Казанский вокзал");
   const [audiofile, setAudiofile] = useState(null);
   const [image, setImage] = useState(null);
-  const [tags, setTags] = useState("город, шорох");
+  const [tags, setTags] = useState("город, шум, разговоры");
   const [recording, setRecording] = useState();
   const [uri, setUri] = useState();
   const [token, setToken] = useState(null);
+
+  const [clicked, setClicked] = useState(false);
+  const [clicked2, setClicked2] = useState(false);
+  const [clicked3, setClicked3] = useState(false);
+  
 
   useEffect(() => {
     authToken();
@@ -183,21 +189,49 @@ const RecorderScreen = ({ navigation }) => {
 
   return (
     <View>
-      <TextInput
+      <SearchInput
+              placeholder = {"Название"}
+              search={false}
+              isLight= {false}
+              clicked={clicked}
+              setClicked={setClicked}
+              searchPhrase={name}
+              setSearchPhrase={setName}
+            />
+      {/* <TextInput
         style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={name}
-      />
-      <TextInput
+      /> */}
+      {/* <TextInput
         style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={descr}
-      />
-      <TextInput
+      /> */}
+         <SearchInput
+              placeholder = {"Место"}
+              search={false}
+              isLight= {false}
+              clicked={clicked2}
+              setClicked={setClicked2}
+              searchPhrase={location}
+              setSearchPhrase={setLocation}
+            />
+
+          <SearchInput
+              placeholder = {"Теги"}
+              search={false}
+              isLight= {false}
+              clicked={clicked3}
+              setClicked={setClicked3}
+              searchPhrase={tags}
+              setSearchPhrase={setTags}
+            />
+      {/* <TextInput
         style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
         // onChangeText={onChangeText}
         value={location}
-      />
+      /> */}
       <App uri={uri} />
 
       <ImagePick onChoosing={(image) => createImageFIle(image)} />
@@ -206,7 +240,7 @@ const RecorderScreen = ({ navigation }) => {
         title={recording ? "Stop Recording" : "Start Recording"}
         onPress={recording ? stopRecording : startRecording}
       />
-      {uri && image && token && (
+      {uri && image && token &&  location && name && tags && (
         <Button title={"Send shum"} onPress={() => postSound()} />
       )}
     </View>

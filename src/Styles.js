@@ -275,6 +275,16 @@ module.exports = StyleSheet.create({
                 borderBottomWidth: 2,
             },
         },
+
+       
+    },
+    button: {
+        color: white,
+        fontSize: 24,
+        fontWeight: "700",
+        width: "100%",
+        textTransform: "uppercase",
+        // textAlign: "center",
     }
 
 }

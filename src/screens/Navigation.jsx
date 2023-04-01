@@ -17,6 +17,8 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 const styles = require("../Styles");
 import RecorderScreen from "./Recorder";
+
+
 const theme = {
   colors: {
     background: styles.mainColors.green,
@@ -50,10 +52,10 @@ const Navigation = () => {
         },
       })
       .then((r) => {
-        alert(JSON.stringify(r.data));
+        // alert(JSON.stringify(r.data.user));
         dispatch({
           type: "SET_MAIN_REDUCER",
-          payload: { userId: r.data.id, username: r.data.name },
+          payload: { userId: r.data.user.id, username: r.data.user.name },
         });
       })
       .then(() => {
@@ -163,6 +165,37 @@ const Navigation = () => {
                           label: "Поделиться профилем",
                           value: "Share",
                           onChange: () => null,
+                        },
+                        {
+                          label: "Выйти",
+                          value: "Exit",
+                          onChange: () => {
+                            AsyncStorage.removeItem("id_token");
+                            setToken(null);
+                               dispatch({
+                              type: "SET_MAIN_REDUCER",
+                              payload: { userId: null},
+                            });
+
+                            axios.delete("http://localhost:3000/api/v1/users/sign_out", {
+                              headers: {
+                                Authorization: `${token}`,
+                              },
+                            })
+                            props.navigation.navigate({ name: "Лента"});
+                          
+                            // Promise.resolve()
+                            // .then(() => {
+                            //   AsyncStorage.removeItem("id_token");
+                           
+                            // })
+                            // .then(() => {
+                            //    
+                            // })
+                            
+                           
+                           
+                          }
                         },
                       ]}
                     />

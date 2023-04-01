@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchUser = () => {
     // alert(userId)
-
+    setIsLoading(true);
     axios
       .get("http://localhost:3000/api/v1/user/")
       .then((r) => {
@@ -31,6 +31,15 @@ const HomeScreen = ({ navigation }) => {
 useEffect(() => {
     fetchUser();
   }, []);
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUser()
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const mock = [
     {

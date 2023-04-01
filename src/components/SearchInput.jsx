@@ -5,11 +5,14 @@ import SearchIcon from "../icons/A_SearchIcon";
 import CloseIcon from "../icons/A_CloseIcon";
 
 const SearchInput = ({
+  search = true,
   clicked,
   searchPhrase,
   setSearchPhrase,
   setClicked,
+  placeholder ="Search",
   isLight = true,
+  isPassword = false,
 }) => {
   const inputRef = useRef();
   const isLightTheme = isLight ? "lightTheme" : "darkTheme";
@@ -24,17 +27,18 @@ const SearchInput = ({
         }
       >
         {/* search Icon */}
-        <SearchIcon
+       {search &&  <SearchIcon
           color={isLight ? styles.mainColors.black : styles.mainColors.white}
-        />
+        />}
         {/* Input field */}
         <TextInput
           placeholderTextColor={
             isLight ? "#A1B1AD" : "#4C6D65"
           }
+          secureTextEntry={isPassword}
           ref={inputRef}
           style={styles.searchInput[isLightTheme].input}
-          placeholder="Search"
+          placeholder={placeholder}
           value={searchPhrase}
           onChangeText={setSearchPhrase}
           onFocus={() => {
