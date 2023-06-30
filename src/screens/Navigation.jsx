@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 const styles = require("../Styles");
 import RecorderScreen from "./Recorder";
-
+import { TagsSelectScreen } from "./TagsSelect/TagsSelectScreen";
 
 const theme = {
   colors: {
@@ -31,10 +31,6 @@ const Navigation = () => {
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const { username, userId } = useSelector((state) => state.main);
-
-  // useEffect(() => {
-  //   alert(username);
-  // }, [username])
 
   useEffect(() => {
     authToken();
@@ -52,7 +48,6 @@ const Navigation = () => {
         },
       })
       .then((r) => {
-        // alert(JSON.stringify(r.data.user));
         dispatch({
           type: "SET_MAIN_REDUCER",
           payload: { userId: r.data.user.id, username: r.data.user.name },
@@ -66,7 +61,7 @@ const Navigation = () => {
   const authToken = () => {
     AsyncStorage.getItem("id_token", (err, result) => {
       setToken(result);
-      console.log(result);
+      // console.log(result);
     });
   };
 
@@ -146,6 +141,14 @@ const Navigation = () => {
                   ),
                 }}
               />
+              <Tab.Screen 
+                name="Теги"
+                component={TagsSelectScreen}
+                options={{
+                 title: "Теги",
+                 header: (props) => <ScreenHeader {...props} />,
+               }}
+              />
               <Tab.Screen
                 name="Профиль"
                 component={ProfileScreen}
@@ -193,8 +196,6 @@ const Navigation = () => {
                             //    
                             // })
                             
-                           
-                           
                           }
                         },
                       ]}

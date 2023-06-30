@@ -51,15 +51,7 @@ const searchForShums = (searchPhrase) => {
   if(userId) {
      axios.get(`http://localhost:3000/api/v1/soundcards/?multiple=${searchPhrase}&user=${userId}`)
   .then((r) => {
-  //  alert(JSON.stringify(r.data)); 
-  
-//TODO: fix this
-   const uniqueAddresses = Array.from(new Set(r.data.map(a => a.id)))
-    .map(id => {
-      return r.data.find(a => a.id === id)
-    })
-    console.log(uniqueAddresses);
-    setData(uniqueAddresses);
+    setData(r.data);
   })
   .then(() => {
     setIsLoading(false);
@@ -87,8 +79,6 @@ const searchForShums = (searchPhrase) => {
         backgroundColor: styles.mainColors.white,
         height: "150%",
         borderRadius: 12,
-        paddingLeft: 16,
-        paddingRigth: 16,
       }}
       data={data}
       renderItem={({ item, index }) => {

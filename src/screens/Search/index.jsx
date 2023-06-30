@@ -15,71 +15,38 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import ListSounds from "./components/ListSounds";
 import MyAdditableTabBar from "../../components/Tabs";
 import TrackInList from "../PopularNewScreen/components/TrackInList";
-
-
+import { TagList } from "./components/TagsLits";
+import { useSelector } from "react-redux";
 const Tab = createMaterialTopTabNavigator();
+import { useDispatch } from "react-redux";
+import { UsersList } from "./components/UsersList";
 
 const SearchScreen = ({navigation}) => {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [dataTags, setDataTags] = useState([]);
   const [clicked, setClicked] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
-
-  useEffect(() => {
-   fetchSoundCards();
-  }, [])
-
-  const fetchSoundCards = (value) => {
-    setIsLoading(true);
-    if(value) { 
-    axios
-      .get(`http://localhost:3000/api/v1/soundcards/?starts_with=${value}`)
-      .then((r) => {
-        setData(r.data);
-        console.log(r.data)
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-    } else {
- axios
-      .get("http://localhost:3000/api/v1/soundcards")
-      .then((r) => {
-        setData(r.data);
-        console.log(r.data)
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-    }
-   
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      console.log(searchPhrase)
-      fetchSoundCards(searchPhrase);
+      dispatch({
+        type: "SET_MAIN_REDUCER",
+        payload: { search: searchPhrase },
+        })
     }, 1000)
 
     return () => clearTimeout(delayDebounceFn)
   }, [searchPhrase])
 
-  {
-    /* <FlatList 
-            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchSoundCards}/>}
-            style={{backgroundColor: 'lightgray'}} 
-            data={state} 
-            renderItem={({item, i}) => {
-              return (
-                <TouchableOpacity>
-                  <FlexRow>
-                    <AvatarThumb source={{uri: `http://localhost:3000${item?.avatar?.thumb?.url}`}}/>
-                    <Text>{item.name}</Text>
-                  </FlexRow>
-                </TouchableOpacity>
-              )
-            }} /> */
-  }
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: "SET_MAIN_REDUCER",
+        payload: { search: "" },
+        })
+    }
+  }, [])
 
   return (
         <>
@@ -90,21 +57,16 @@ const SearchScreen = ({navigation}) => {
             setSearchPhrase={setSearchPhrase}
             isLight={false}
           />
-          {isLoading ? (
-        <View>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
+          {
         <>
           <Tab.Navigator
             tabBar={(props) => <MyAdditableTabBar {...props} />}
-            initialRouteName={"My"}
+            initialRouteName={"Звуки"}
             tabBarPosition={"top"}
           >
             <Tab.Screen
               name="Звуки"
               initialParams={{
-                list: data,
                 navigation: navigation,
                 searchPhrase: searchPhrase,
               }}
@@ -112,24 +74,21 @@ const SearchScreen = ({navigation}) => {
             />
             <Tab.Screen name="Теги" 
             initialParams={{
-              list: data,
               navigation: navigation,
               searchPhrase: searchPhrase,
             }}
-            component={ListSounds} />
+            component={TagList} />
             <Tab.Screen
               name="Люди"
               initialParams={{
-                list: data,
                 navigation: navigation,
                 searchPhrase: searchPhrase,
               }}
-              component={ListSounds}
+              component={UsersList}
             />
             <Tab.Screen
               name="Места"
               initialParams={{
-                list: data,
                 navigation: navigation,
                 searchPhrase: searchPhrase,
               }}
@@ -137,7 +96,7 @@ const SearchScreen = ({navigation}) => {
             />
           </Tab.Navigator>
         </>
-      )}
+      }
     </>
   );
 };

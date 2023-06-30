@@ -16,7 +16,7 @@ const SearchInput = ({
 }) => {
   const inputRef = useRef();
   const isLightTheme = isLight ? "lightTheme" : "darkTheme";
-  console.log(styles.searchInput.container);
+
   return (
     <View style={styles.searchInput[isLightTheme].container}>
       <View
@@ -37,7 +37,7 @@ const SearchInput = ({
           }
           secureTextEntry={isPassword}
           ref={inputRef}
-          style={styles.searchInput[isLightTheme].input}
+          style={{...styles.searchInput[isLightTheme].input, ...styles.searchInput[isLightTheme].placeholderStyle}}
           placeholder={placeholder}
           value={searchPhrase}
           onChangeText={setSearchPhrase}

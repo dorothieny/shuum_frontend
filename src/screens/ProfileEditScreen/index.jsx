@@ -52,7 +52,7 @@ const ProfileEditScreen = ({navigation}) => {
     AsyncStorage.getItem("id_token", (err, result) => {
       setToken(result);
       // alert(result);
-      console.log(result);
+      // console.log(result);
     });
   };
 

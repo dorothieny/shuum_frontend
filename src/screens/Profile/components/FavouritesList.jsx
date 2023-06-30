@@ -63,8 +63,6 @@ const FavoritesList = ({route}) => {
             backgroundColor: styles.mainColors.white,
             height: "150%",
             borderRadius: 12,
-            paddingLeft: 16,
-            paddingRigth: 16,
           }}
           data={data}
           renderItem={({ item, index }) => {

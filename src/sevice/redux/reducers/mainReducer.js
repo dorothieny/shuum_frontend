@@ -2,6 +2,13 @@ const initialState = {
     userId: null,
     userName: "",
     userEmail: "",
+    isShowPlayer: false,
+    isPlaying: false,
+    playerNowName: "",
+    playAction: "",
+    pauseAction: "",
+    search: "",
+    tags: [],
 
 };
 export const mainReducer = (state = initialState, action) => {

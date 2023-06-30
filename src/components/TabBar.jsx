@@ -6,7 +6,7 @@ import BackIcon from "../icons/A_BackIcon";
 import HomeIcon from "../icons/A_HomeIcon";
 import SearchIcon from "../icons/A_SearchIcon";
 import ProfileIcon from "../icons/A_ProfileIcon";
-
+import PlayerBar from "./PlayerBar";
 const styles = require("../Styles");
 
 const MyTabBar = ({ state, descriptors, navigation }) => {
@@ -43,6 +43,8 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
   };
 
   return (
+    <View>
+      <PlayerBar />
     <View style={styles.tabBarContainer}>
       <View style={styles.tapBar}>
         {state.routes.map((route, index) => {
@@ -59,6 +61,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
             label === "Популярное" ||
             label === "Новое" ||
             label === "Авторизация" ||
+            label === "Теги" ||
             label === "Рекордер" ||
             label === "Редактирование"
               ? true
@@ -105,6 +108,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
           );
         })}
       </View>
+    </View>
     </View>
   );
 };

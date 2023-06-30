@@ -24,7 +24,8 @@ const HomeStack = createNativeStackNavigator();
 const signInFetch = (email, password) => {
     axios
       .post("http://localhost:3000/api/v1/users/sign_in", {
-        user: { email: email.toLowerCase(), password: password.toLowerCase() },
+        user: { email: email.toLowerCase(), password: password.toLowerCase()},
+       
       })
       .then((r) => {
         AsyncStorage.setItem("id_token", r.headers.authorization);

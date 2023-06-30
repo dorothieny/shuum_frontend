@@ -27,6 +27,8 @@ const ScreenHeader = (props) => {
     try {
       if(props.route.name === "Редактирование") {
         props.navigation?.navigate("Профиль");
+      } else if(props.route.name === "Теги"){
+        props.navigation?.navigate("Рекордер", { open: true });
       } else {
         props.navigation?.goBack();
       }

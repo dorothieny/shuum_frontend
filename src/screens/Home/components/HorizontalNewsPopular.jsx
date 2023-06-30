@@ -24,7 +24,6 @@ const HorizontalNewsPopular = (props) => {
         .get("http://localhost:3000/api/v1/popular/")
         .then((r) => {
           setState(r.data);
-          //   alert(JSON.stringify(r.data));
         })
         .finally(() => {
           setIsLoading(false);
@@ -34,7 +33,6 @@ const HorizontalNewsPopular = (props) => {
         .get("http://localhost:3000/api/v1/newest/")
         .then((r) => {
           setState(r.data);
-          //  alert(JSON.stringify(r.data));
         })
         .finally(() => {
           setIsLoading(false);

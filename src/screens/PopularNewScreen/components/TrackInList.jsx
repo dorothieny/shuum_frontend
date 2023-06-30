@@ -1,10 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, Text, View, ActivityIndicator, RefreshControl, TouchableOpacity, Image, Button } from 'react-native';
-import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components/native';
-import { Audio } from 'expo-av';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import useAudioPlayer from '../../../hooks/useAudioPlayer';
+import { Tag } from '../../../components/Tag';
+import styles from '../../../Styles';
+import React, {useEffect, useState} from 'react';
+import { useSelector } from 'react-redux';
 
 export const TrackTitile = styled.Text`
     font-weight: 600;
@@ -20,115 +21,25 @@ const TrackLocation = styled.Text`
 `
 
 const StyledImage = styled.Image`
-    height: 96px;
-    width: 96px;
-    border-radius: 16px;
-`
-
-const TrackItemList = styled.View`
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    margin-bottom: 8px;
+    height: 100%;
+    position:absolute
+    width: 100%;
+    border-radius: 50%;
 `
 
 const FlexColumn = styled.View`
     display: flex;
     flex-direction: column;
+    align-items: "space-between";
     height: 100%;
 `
 
-const FlexRow = styled.View`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    flex: 1;
-    padding: 8px 16px;
-    border-radius: 16px;
-`
-
-const TagsView = styled.View`
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-`
-
-const Tag = styled.View`
-    background-color: #A6A9B6;
-    border-radius: 4px;
-    padding: 2px 8px;
-    margin-right: 8px;
-`
 
 
 const TrackInList = ({item, navigation}) => {
-    const [loaded, setLoaded] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [played, setPlayed] = useState(false);
-
-    const sound = useRef(new Audio.Sound());
-
-
-   const loadAudio = async () => {
-    setLoading(true);
-    const checkLoading = await sound.current.getStatusAsync();
-    if (checkLoading.isLoaded === false) {
-      try {
-        const result = await sound.current.loadAsync({ uri: `http://localhost:3000${item?.audiofile?.url}`});
-        if (result.isLoaded === false) {
-          setLoading(false);
-        } else {
-          setLoading(false);
-          setLoaded(true);
-        }
-      } catch (error) {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-    }
-}
-    useEffect(() => {
-        loadAudio();
-      }, []);
-    
-
-  const PlayAudio = async () => {
-    try {
-      const result = await sound.current.getStatusAsync();
-      if (result.isLoaded) {
-        if (result.isPlaying === false) {
-          sound.current.playAsync();
-          setPlayed(true);
-        }
-      }
-    } catch (error) {}
-  };
-
-  const PauseAudio = async () => {
-    try {
-      const result = await sound.current.getStatusAsync();
-      if (result.isLoaded) {
-        if (result.isPlaying === true) {
-          sound.current.pauseAsync();
-          setPlayed(false);
-        }
-      }
-    } catch (error) {}
-  };
-
- 
-    useEffect(() => {
-      return sound
-        ? () => {
-            console.log('Unloading Sound');
-            sound.unloadAsync();
-          }
-        : undefined;
-    }, [sound]);
-
+  const {isPlaying, playAudio, pauseAudio, loading} = useAudioPlayer(`http://localhost:3000${item?.audiofile?.url}`);
+  const { userId } = useSelector((state) => state.main);
+  const [liked, setLiked] = useState(false);
     const sliceName = (name) => {
         if(name.length >= 50) {
           return name.substring(0, 50) + "..."
@@ -136,7 +47,10 @@ const TrackInList = ({item, navigation}) => {
           return name
         }
        }
-
+       useEffect(() => {
+        const s = Boolean(item?.likes?.filter((item) => item?.user_id === userId).length);
+        setLiked(s);
+        }, [item]);
 
     return ( 
         <>
@@ -144,42 +58,53 @@ const TrackInList = ({item, navigation}) => {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate("Player", {id: item.id})
                         }}>
-                            <TrackItemList>
+                            <View style={styles.trackItemList}>
+                              <View style={{display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: 96, height: 96}}>
                                 <StyledImage 
                                     source={{uri: `http://localhost:3000${item?.image?.url}`}}
                                 />
-                                <FlexRow>
+                                {item?.image?.url && (
+                                  <View
+                                    style={{
+                                      position: "absolute",
+                                      width: "100%",
+                                      height: "100%",
+                                      borderRadius: "500%",
+                                      backgroundColor: styles.mainColors.black,
+                                      opacity: 0.2,
+                                    }}
+                                  />
+                                )}
+                                {!loading ?
+                                  (<View>
+                                    {isPlaying ? <Ionicons name="pause" size={24} color={styles.mainColors.white} onPress={pauseAudio}/> : 
+                                    <Ionicons name="play" size={24}  color={styles.mainColors.white}  onPress={playAudio}/> }
+                                      </View>) : (
+                                          <>
+                                          <ActivityIndicator />
+                                          
+                                      </>
+                                      )
+                                  }
+                                </View>
+                                <View style={styles.trackItemList.flexRow}>
                                     <FlexColumn>
-                                        <TrackTitile>{sliceName(item.name)}</TrackTitile>
-                                        <TrackLocation>{item.location}</TrackLocation>
-                                    <TagsView>
+                                        <Text style={{...styles.round.text, textAlign: "left"}}>{sliceName(item.name)}</Text>
+                                        
+                                    <View style={styles.tagsView}>
                                         {item.tags.map((item, i) => {
                                             return (
-                                                <Tag key={i}>
-                                                    <Text>
-                                                    {item.tagname}
-                                                    </Text>
-                                                </Tag>
+                                                <Tag key={i} name={item.tagname} />
                                             )
                                         })}
-                                    </TagsView> 
-                                    <TrackLocation>{new Date(item.created_at).toLocaleDateString()}</TrackLocation>
+                                    </View> 
+                                    <TrackLocation>{item.location}</TrackLocation>
                                 </FlexColumn>
-
-                                {!loading ?
-                        (<View>
-                           {played ? <Ionicons name="pause" size={24}  onPress={PauseAudio}/> : <Ionicons name="play" size={24}  onPress={PlayAudio}/> }
-                            </View>) : (
-                                <>
-                                <ActivityIndicator />
-                                
-                            </>
-                            )
-                            }
-                                </FlexRow>
+                                {liked && <Ionicons name="heart" size={24} color={styles.mainColors.lightGreen} />}
+                                </View>
                                 
                                 
-                            </TrackItemList>
+                            </View>
                             
                     </TouchableOpacity>
                 </View>

@@ -1,102 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { Text, TextInput, View, StyleSheet, Image, Button } from "react-native";
+import { Text, TextInput, View, StyleSheet, Image, Button, TouchableOpacity, Dimensions, Animated } from "react-native";
 import { Audio } from "expo-av";
-import * as ImagePicker from "expo-image-picker";
+import { ImagePick } from "./components/ImagePicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const styles = require("../../Styles");
 import SearchInput from "../../components/SearchInput";
+import Modal from 'react-native-modal';
+import { Tag } from "../../components/Tag";
+import { useSelector } from "react-redux";
+import { App } from "./components/Record";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { OnRecording } from "./components/OnRecording";
 
-const App = ({ uri }) => {
-  const [sound, setSound] = React.useState();
-
-  async function playSound() {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync({ uri: uri });
-    setSound(sound);
-
-    console.log("Playing Sound");
-    await sound.playAsync();
-  }
-
-  React.useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
-
-  return (
-    <View>
-      <Button title="Play Sound" onPress={playSound} />
-    </View>
-  );
-};
-
-export const ImagePick = ({ onChoosing, settedImage = null }) => {
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    console.log(settedImage)
-    if (settedImage) {
-      setImage(settedImage);
-    }
-  }, [settedImage]);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      let source = {};
-      let fileName = result.fileName || `newFile.${result.uri.split(".")[1]}`;
-      if (
-        Platform.OS === "ios" &&
-        (fileName.endsWith(".heic") || fileName.endsWith(".HEIC"))
-      ) {
-        fileName = `${fileName.split(".")[0]}.JPG`;
-      }
-      source = {
-        uri: result.uri.split("//")[1],
-        fileName,
-        type: `${result.uri.split(".")[1]}`,
-      };
-      setImage(result.uri);
-      onChoosing(source);
-    }
-  };
-
-  return (
-    <View>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
-    </View>
-  );
-};
-const RecorderScreen = ({ navigation }) => {
+const RecorderScreen = ({ navigation, route}) => {
+  
+  console.log(route?.params?.open);
   const [name, setName] = useState("Поезд");
   const [descr, setDescr] = useState("Записала в пути");
   const [location, setLocation] = useState("Москва, Казанский вокзал");
   const [audiofile, setAudiofile] = useState(null);
   const [image, setImage] = useState(null);
-  const [tags, setTags] = useState("город, шум, разговоры");
   const [recording, setRecording] = useState();
   const [uri, setUri] = useState();
   const [token, setToken] = useState(null);
 
   const [clicked, setClicked] = useState(false);
   const [clicked2, setClicked2] = useState(false);
-  const [clicked3, setClicked3] = useState(false);
   
+  const [modalVisible, setModalVisible] = useState(false);
+  const { tags } = useSelector((state) => state.main);
+
+  useEffect(() =>{
+    if(route?.params?.open) {
+      setModalVisible(route.params.open);
+    }
+  }, [route?.params])
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   useEffect(() => {
     authToken();
@@ -105,8 +52,7 @@ const RecorderScreen = ({ navigation }) => {
   const authToken = () => {
     AsyncStorage.getItem("id_token", (err, result) => {
       setToken(result);
-      // alert(result);
-      console.log(result);
+      // console.log(result);
     });
   };
 
@@ -136,7 +82,7 @@ const RecorderScreen = ({ navigation }) => {
         },
       })
       .then((r) => {
-        console.log(r);
+        // console.log(r);
       });
   };
 
@@ -162,6 +108,7 @@ const RecorderScreen = ({ navigation }) => {
   }
 
   async function stopRecording() {
+    setModalVisible(true); 
     console.log("Stopping recording..");
     setRecording(undefined);
 
@@ -187,63 +134,118 @@ const RecorderScreen = ({ navigation }) => {
     setImage(image);
   };
 
+
+
   return (
     <View>
-      <SearchInput
+      <TouchableOpacity
+        onPress={() => {
+          recording ? stopRecording() : startRecording();
+        }}
+      >
+        <OnRecording isRecording={recording}/>
+      </TouchableOpacity>
+      {/* {uri && image && token &&  location && name && tags && (
+        <Button title={"Send shum"} onPress={() => postSound()} />
+      )} */}
+      <Modal
+        isVisible={modalVisible}
+        swipeDirection="down"
+        onSwipeComplete={closeModal}
+        backdropOpacity={0.5}
+        style={styled.modal}
+      >
+        <View style={styled.modalContent}>
+          <View>
+          <Text style={{...styles.textes.h3, marginBottom: 24}}>
+            Новая запись
+            </Text>
+            <Ionicons style={{position: 'absolute', right: 16}} name="chevron-down-outline" size={32} color={styles.mainColors.black} 
+            onPress={closeModal}/>
+          <View style={{marginBottom: 32}}>
+          <App uri={uri} />
+          </View>
+          <View style={{marginBottom: 32}}>
+          <SearchInput
               placeholder = {"Название"}
               search={false}
-              isLight= {false}
+              isLight= {true}
               clicked={clicked}
               setClicked={setClicked}
               searchPhrase={name}
               setSearchPhrase={setName}
             />
-      {/* <TextInput
-        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
-        // onChangeText={onChangeText}
-        value={name}
-      /> */}
-      {/* <TextInput
-        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
-        // onChangeText={onChangeText}
-        value={descr}
-      /> */}
          <SearchInput
-              placeholder = {"Место"}
+              placeholder = {"Локация"}
               search={false}
-              isLight= {false}
+              isLight= {true}
               clicked={clicked2}
               setClicked={setClicked2}
               searchPhrase={location}
               setSearchPhrase={setLocation}
             />
-
-          <SearchInput
-              placeholder = {"Теги"}
-              search={false}
-              isLight= {false}
-              clicked={clicked3}
-              setClicked={setClicked3}
-              searchPhrase={tags}
-              setSearchPhrase={setTags}
-            />
-      {/* <TextInput
-        style={{...styles.searchInput.input, color: styles.mainColors.white, borderBottomColor: styles.mainColors.white, marginBottom: styles.feedBlock.blockGap}}
-        // onChangeText={onChangeText}
-        value={location}
-      /> */}
-      <App uri={uri} />
-
+        </View>
+          <TouchableOpacity 
+          style={{marginBottom: 32}}
+          onPress={() => {
+            navigation.navigate({ name: "Теги"});
+            closeModal();
+            }}>
+              <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+            <Text style={{...styles.textes.h2, textAlign: 'left'}} >Теги</Text>
+            <Text style={{...styles.textes.h2, color: styles.mainColors.lightGreen, textAlign: 'left'}} >{`[ + ]`}</Text>
+            </View>
+              <View style={styles.tagsView}>
+                {tags?.map((item, i) => {
+                    return (
+                        <TouchableOpacity 
+                        accessibilityRole="button" 
+                        onPress={() => {
+                            dispatch({
+                                type: "SET_MAIN_REDUCER",
+                                payload: { tags: processStringArray(item, tags) },
+                              });
+                        }}>
+                            <Tag key={i} name={item} />
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
+        </TouchableOpacity>
       <ImagePick onChoosing={(image) => createImageFIle(image)} />
-
-      <Button
-        title={recording ? "Stop Recording" : "Start Recording"}
-        onPress={recording ? stopRecording : startRecording}
-      />
-      {uri && image && token &&  location && name && tags && (
-        <Button title={"Send shum"} onPress={() => postSound()} />
-      )}
+      </View>
+      <TouchableOpacity 
+          accessibilityRole="button" 
+          onPress={() => postSound()}>
+            <Text style={styles.textes.h2}>[ Опубликовать ]</Text>
+      </TouchableOpacity>
+        </View>
+      </Modal>  
     </View>
   );
 };
+
+const styled = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+    psddingTop: 20,
+  },
+  modalContent: {
+    backgroundColor: styles.mainColors.white,
+    paddingVertical: 60,
+    height: "100%",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+});
 export default RecorderScreen;

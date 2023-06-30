@@ -81,7 +81,7 @@ useEffect(() => {
           renderItem={({item, index}) => {
             return (
               <View style={ index !== 0 && {
-                paddingBottom: styles.feedBlock.betweenGap, 
+                paddingBottom: index === mock.length - 1 ?  150 : styles.feedBlock.betweenGap, 
                 backgroundColor: styles.mainColors.white,
                 paddingTop: 16,
                 paddingLeft: 16,

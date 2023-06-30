@@ -7,26 +7,59 @@ import {
 import React, { useState, useEffect } from "react";
 const styles = require("../../../Styles");
 import TrackInList from "../../PopularNewScreen/components/TrackInList";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { NothingFound } from "./NothingFound";
 
 const ListSounds = ({ route = {} }) => {
-  const { list, navigation, searchPhrase } = route?.params;
+  const { navigation } = route?.params;
   const [isLoading, setIsLoading] = useState(true);
-  const [localData, setLocalData] = useState([]);
+  const [data, setData] = useState([]);
 
-
+  const { search } = useSelector((state) => state.main);
 
   useEffect(() => {
-    Promise.resolve()
-      .then(() => {
-        setIsLoading(true);
-      })
-      .then(() => {
-        setLocalData(list);
-      })
-      .then(() => {
-        setIsLoading(false);
-      });
-  }, [list]);
+    fetchSoundCards(search);
+   }, [search])
+ 
+   const fetchSoundCards = (value) => {
+     setIsLoading(true);
+     if(value) { 
+     axios
+       .get(`http://localhost:3000/api/v1/soundcards/?starts_with=${value}`)
+       .then((r) => {
+         setData(r.data);
+         console.log(r.data)
+       })
+       .finally(() => {
+         setIsLoading(false);
+       });
+     } else {
+       axios
+       .get("http://localhost:3000/api/v1/soundcards")
+       .then((r) => {
+         setData(r.data);
+         console.log(r.data)
+       })
+       .finally(() => {
+         setIsLoading(false);
+       });
+     }
+    
+   };
+
+  // useEffect(() => {
+  //   Promise.resolve()
+  //     .then(() => {
+  //       setIsLoading(true);
+  //     })
+  //     .then(() => {
+  //       setLocalData(list);
+  //     })
+  //     .then(() => {
+  //       setIsLoading(false);
+  //     });
+  // }, [list]);
 
   return (
     <>
@@ -43,16 +76,16 @@ const ListSounds = ({ route = {} }) => {
         >
           <ActivityIndicator size="large" />
         </View>
-      ) : (
+      ) : data ? (
         <FlatList
           style={{ ...styles.app, backgroundColor: styles.mainColors.white }}
-          data={localData}
+          data={data}
           renderItem={({ item, index }) => {
             return (
               <View
-                key={index+Math.random(0,localData.length)}
+                key={index+Math.random(0,data.length)}
                 style={
-                  index == localData.length - 1
+                  index == data.length - 1
                     ? { paddingBottom: 150 }
                     : index == 0
                     ? { marginTop: 16 }
@@ -63,9 +96,9 @@ const ListSounds = ({ route = {} }) => {
               </View>
             );
           }}
-        />
+        /> ) : <NothingFound />
       
-      )}
+      }
     </>
   );
 };

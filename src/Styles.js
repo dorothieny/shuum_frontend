@@ -8,6 +8,8 @@ const white = "#F5F5F5";
 const black = "#1D1F1F";
 const gray = "#C0C0C0";
 const lightGreen = "#247C5D";
+const alphaGreen = "#D7E3DE";
+const alphaGreenText = "#739488";
 
 module.exports = StyleSheet.create({
     mainColors: {
@@ -19,14 +21,37 @@ module.exports = StyleSheet.create({
         lightGreen: lightGreen,
     },
     app: {
-        // backgroundColor: white,
+        // backgroundColor: yellow,
         borderRadius: '12px',
         overflow: 'hidden',
         zIndex: 10,
-        // paddingTop: 16,
+        // paddingBottom: 700,
+        // paddingBottom: 500,
         // paddingLeft: 16,
         // paddingRight: 16,
         flex: 1,
+    },
+    textes: {
+        h2: {
+            color: black,
+            fontWeight: "700",
+            fontSize: "24px",
+            textTransform: "uppercase",
+            textAlign: "center",
+        },
+        h3: {
+            fontSize: 16,
+            fontWeight: "700",
+            lineHeight: "20px",
+            textTransform: 'uppercase',
+            textAlign: "center",
+        }
+    },
+    usersList: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        
     },
     tabBarContainer: {
         marginBottom: 34,
@@ -93,12 +118,14 @@ module.exports = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         circle: {
-            backgroundColor: white,
+            backgroundColor: green,
             width: 107,
             height: 107,
             borderRadius: "100%",
         },
-
+        player: {
+            
+        },
         text: {
             textAlign: "center",
             fontWeight: "700",
@@ -118,7 +145,95 @@ module.exports = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
     },
-
+    tagStyle: {
+        backgroundColor: alphaGreen,
+        paddingVertical: 2,
+        borderRadius: 2,
+        paddingHorizontal: 3,
+        marginRight: 8,
+        // width: "fit-content",
+        flexGrow: 0, 
+        flexShrink: 0,
+        text: {
+            color: alphaGreenText,
+        },
+        textLarge: {
+            color: alphaGreenText,
+            fontSize: 48,
+            lineHeight: 48,
+            letterSpacing: -2.4,
+            textTransform: "lowercase",
+    }
+    },
+    trackItemList: {
+        display: 'flex',
+        flexDirection: 'row',
+        boxSizing: 'border-box',
+        marginTop: 8,
+        marginBottom: 8,
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        flexRow: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            /* background-color: white; */
+            flex: 1,
+            paddingVertical: 8,
+            borderRadius: 16,
+            paddingHorizontal: 16,
+        }
+    },
+playerBar: {
+        container: {
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundColor: "white",
+          alignItems: "center",
+          height: 155,
+          zIndex:0,
+          paddingHorizontal: 16,
+          paddingBottom: 100,
+          paddingTop: 16,
+          shadowColor: "rgba(0, 0, 0, 0.11)",
+          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 1,
+          shadowRadius: 19,
+          // Дополнительные стили для контейнера
+        },
+        row: {
+            display: 'flex', 
+            flexDirection: 'row', 
+            flex: 1, 
+            alignItems: 'center',
+        },
+        playIcon: {
+          borderColor: green,
+          borderWidth: 2,
+          height: 40,
+          width: 40,
+          display: "flex", 
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "500%",
+        },
+        button: {
+          flexDirection: "row",
+          alignItems: "center",
+        },
+        // Дополнительные стили для иконок, текста и кнопок управления
+    },
+    tagsView: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 8,
+    },
     roundSound: {
         width: 360,
         height: 360,
@@ -168,8 +283,6 @@ module.exports = StyleSheet.create({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderColor: "solid rgba(36, 124, 93, 0.2)",
-            borderWidth: 2,
             height: 360,
             width: 360,
             borderRadius: "500%",
@@ -208,6 +321,7 @@ module.exports = StyleSheet.create({
                 flexDirection: "row",
                 width: "100%",
                 paddingTop: 16,
+                // paddingHorizontal: 16,
                 backgroundColor: white,
                 paddingBottom: 16,
             },
@@ -230,11 +344,14 @@ module.exports = StyleSheet.create({
             },
             input: {
                 fontSize: 20,
-                marginLeft: 10,
-                width: "90%",
+                marginLeft: 8,
+                flex: 1,
                 borderBottomColor: black,
                 borderBottomWidth: 2,
             },
+            placeholderStyle: {
+                textTransform: "uppercase", // стиль плейсхолдера
+              },
         },
 
         darkTheme: {
@@ -244,6 +361,7 @@ module.exports = StyleSheet.create({
                 flexDirection: "row",
                 width: "100%",
                 paddingTop: 16,
+                // paddingHorizontal: 16,
                 backgroundColor: "transparent",
                 paddingBottom: 16,
             },
@@ -268,12 +386,15 @@ module.exports = StyleSheet.create({
             },
             input: {
                 fontSize: 20,
-                marginLeft: 10,
-                width: "90%",
+                marginLeft: 8,
+                flex:1,
                 color: white,
                 borderBottomColor: white,
                 borderBottomWidth: 2,
             },
+            placeholderStyle: {
+                textTransform: "uppercase", // стиль плейсхолдера
+              },
         },
 
        
